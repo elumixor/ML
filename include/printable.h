@@ -14,11 +14,12 @@ struct printable {
     printable(string str);
     printable(const char *arg);
     void __print() const;
-
+    operator string() const;
+    printable &operator=(const string &x);
     static printable empty;
 };
 
 printable operator+(const printable &a, const printable &b);
-
+printable operator "" _pr(const char *str, size_t);
 
 #endif //CALCULUS_PRINTABLE_H

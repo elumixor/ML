@@ -9,6 +9,7 @@
 #include "def.h"
 
 using dim = vector<uint>;
+using cdim = const dim &;
 using vec = vector<num>;
 using cvec = const vec &;
 
@@ -18,15 +19,12 @@ using cvec = const vec &;
 struct tensor {
     uint rank;
     dim dimensions;
-    vec data;
+    vec elements;
 
     tensor();
-    tensor(vec data);
-    tensor(cvec data, dim dimensions);
-
-    static tensor ones(dim dimensions);
-    static tensor zeros(dim dimensions);
-    static tensor random(dim dimensions);
+    tensor(vec elements);
+    tensor(vec elements, dim dimensions);
+    tensor(num element, dim dimensions);
 };
 
 using ctensor = const tensor &;

@@ -24,6 +24,11 @@ using vector = std::vector<T>;
 template<typename T>
 using cvector = const std::vector<T> &;
 
+namespace std {
+    template <typename T>
+    string to_string(cvector<T> v);
+}
+
 // Converts object to string
 #define to_string std::to_string
 

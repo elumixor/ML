@@ -26,6 +26,6 @@ struct ml_not_implemented : ml_exception {
 };
 
 // not implemented exception
-#define nimpl throw ml_not_implemented()
+#define nimpl throw ml_not_implemented();
 
 #endif //CALCULUS_EXCEPTIONS_H
