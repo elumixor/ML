@@ -36,15 +36,15 @@ namespace std {
     string to_string(ctensor tensor);
 
     template<typename T>
-    string to_string(cvector<T> v) {
-        string result{'['};
+    string to_string(cvector<T> v, char opening = '[', char closing = ']', cstring sep = ", ") {
+        string result{opening};
 
         const auto size{v.size()};
         for (uint i = 0; i < size; ++i) {
             result += to_string(v[i]);
-            if (i < size - 1) result += ", ";
+            if (i < size - 1) result += sep;
         }
-        result += "]";
+        result += closing;
         return result;
     }
 }
