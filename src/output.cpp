@@ -7,7 +7,7 @@
 #include "../include/def.h"
 #include "../include/printable.h"
 
-
+printable printable::empty{};
 printable::printable(const char *arg) : str{string(arg)} {}
 void printable::__print() const {
     std::cout << str << std::endl;

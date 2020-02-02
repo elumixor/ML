@@ -14,6 +14,8 @@ struct printable {
     printable(string str);
     printable(const char *arg);
     void __print() const;
+
+    static printable empty;
 };
 
 printable operator+(const printable &a, const printable &b);

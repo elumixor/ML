@@ -30,14 +30,11 @@ using ctensor = const tensor &;
 // Printing functions
 #include "printable.h"
 
-// todo: conditionally remove log() calls
-
 /**
- * Logging, that is only called in debug
- * todo: change
+ * Logging, that is only called if ENABLE_LOGGING is defined
  */
 #if ENABLE_LOGGING
-#define log(arg) printable(printable() + arg).__print()
+#define log(arg) printable(printable::empty + arg).__print()
 #else
 #define log(arg)
 #endif
@@ -46,7 +43,7 @@ using ctensor = const tensor &;
 /**
  * Printing, that always outputs to console
  */
-#define print(arg) printable(printable() + arg).__print()
+#define print(arg) printable(printable::empty + arg).__print()
 
 
 // casts
@@ -55,7 +52,11 @@ using ctensor = const tensor &;
 #define to_int(v) __cast((v), int)
 #define to_num(v) __cast((v), num)
 
-inline num operator "" _n(long double d) {
+// custom suffix to
+inline constexpr num operator "" _n(long double d) {
+    return to_num(d);
+}
+inline constexpr num operator "" _n(unsigned long long d) {
     return to_num(d);
 }
 
