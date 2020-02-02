@@ -5,8 +5,8 @@
 #ifndef CALCULUS_EXCEPTIONS_H
 #define CALCULUS_EXCEPTIONS_H
 
-#include <exception>
 #include "def.h"
+#include <exception>
 
 /** Base for ML exceptions */
 struct ml_exception : virtual public std::exception {

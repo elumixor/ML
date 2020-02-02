@@ -6,10 +6,11 @@
 #define CALCULUS_ASSERTIONS_H
 
 #include "exceptions.h"
+#include "output.h"
 
 /** We define assert as a macro to let message be lazily-evaluated */
 #define __assert1(condition) if (!(condition)) { throw ml_assertion_failed(); }
-#define __assert2(condition, message) if (!(condition)) { throw ml_assertion_failed((message + "\n")); }
+#define __assert2(condition, message) if (!(condition)) { throw ml_assertion_failed((printable::empty + message + "\n")); }
 // helper for overloading number of assert arguments
 #define GET_MACRO(_1, _2, NAME, ...) NAME
 
@@ -18,7 +19,4 @@
 #else
 #define assert(...)
 #endif
-
-
-
 #endif //CALCULUS_ASSERTIONS_H

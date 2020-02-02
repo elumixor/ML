@@ -19,56 +19,36 @@ using uint = unsigned int;
 using string = std::string;
 using cstring = const std::string &;
 
+
 template<typename T>
 using vector = std::vector<T>;
 template<typename T>
 using cvector = const std::vector<T> &;
 
+struct tensor;
+using ctensor = const tensor &;
+struct ml_not_implemented;
+struct printable;
+
+printable operator "" _pr(const char *str, size_t);
+
 namespace std {
-    template <typename T>
-    string to_string(cvector<T> v);
+    string to_string(ctensor tensor);
+
+    template<typename T>
+    string to_string(cvector<T> v) {
+        string result{'['};
+
+        const auto size{v.size()};
+        for (uint i = 0; i < size; ++i) {
+            result += to_string(v[i]);
+            if (i < size - 1) result += ", ";
+        }
+        result += "]";
+        return result;
+    }
 }
 
-// Converts object to string
 #define to_string std::to_string
-
-// tensor class
-#include "tensor.h"
-
-// Printing functions
-#include "printable.h"
-
-// exceptions
-#include "exceptions.h"
-
-/**
- * Logging, that is only called if ENABLE_LOGGING is defined
- */
-#if ENABLE_LOGGING
-#define log(arg) printable(printable::empty + arg).__print()
-#else
-#define log(arg)
-#endif
-
-
-/**
- * Printing, that always outputs to console
- */
-#define print(arg) printable(printable::empty + arg).__print()
-
-
-// Casts
-#define __cast(v, type) static_cast<type>((v))
-
-#define to_int(v) __cast((v), int)
-#define to_num(v) __cast((v), num)
-
-// Custom suffixes to convert to numeric type. These should always be used
-inline constexpr num operator "" _n(long double d) {
-    return to_num(d);
-}
-inline constexpr num operator "" _n(unsigned long long d) {
-    return to_num(d);
-}
 
 #endif //CALCULUS_DEF_H

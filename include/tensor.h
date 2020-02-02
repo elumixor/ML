@@ -5,8 +5,8 @@
 #ifndef CALCULUS_TENSOR_H
 #define CALCULUS_TENSOR_H
 
-#include <vector>
 #include "def.h"
+#include "assertions.h"
 
 using dim = vector<uint>;
 using cdim = const dim &;
@@ -22,17 +22,31 @@ struct tensor {
     vec elements;
 
     tensor();
-    tensor(vec elements);
-    tensor(vec elements, dim dimensions);
-    tensor(num element, dim dimensions);
+    tensor(std::initializer_list<num> elements);
+    tensor(std::initializer_list<tensor> elements);
+    tensor(dim dimensions, num element);
+
+    num element(cdim index) const;
+    vector<tensor> subdim() const;
 };
 
-using ctensor = const tensor &;
+tensor operator+(ctensor a, ctensor b);
+tensor operator-(ctensor a, ctensor b);
+tensor operator*(ctensor a, ctensor b);
+tensor operator/(ctensor a, ctensor b);
 
-#undef to_string
-namespace std {
-    string to_string(ctensor tensor);
+inline tensor operator+(ctensor a, num b) {
+    return a + tensor(a.dimensions, b);
 }
-#define to_string std::to_string
+inline tensor operator-(ctensor a, num b) {
+    return a + -b;
+}
+inline tensor operator*(ctensor a, num b) {
+    nimpl
+}
+inline tensor operator/(ctensor a, num b) {
+    nimpl
+}
+
 
 #endif //CALCULUS_TENSOR_H

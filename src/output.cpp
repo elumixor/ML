@@ -5,7 +5,7 @@
 #include <iostream>
 #include <utility>
 #include "../include/def.h"
-#include "../include/printable.h"
+#include "../include/output.h"
 
 printable printable::empty{};
 printable::printable(const char *arg) : str{string(arg)} {}

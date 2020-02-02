@@ -2,8 +2,11 @@
 // Created by vlado on 2/2/20.
 //
 
-#ifndef CALCULUS_PRINTABLE_H
-#define CALCULUS_PRINTABLE_H
+#ifndef CALCULUS_OUTPUT_H
+#define CALCULUS_OUTPUT_H
+
+#include "def.h"
+#include "string_def.h"
 
 struct printable {
     string str;
@@ -20,6 +23,20 @@ struct printable {
 };
 
 printable operator+(const printable &a, const printable &b);
-printable operator "" _pr(const char *str, size_t);
 
-#endif //CALCULUS_PRINTABLE_H
+/**
+ * Logging, that is only called if ENABLE_LOGGING is defined
+ */
+#if ENABLE_LOGGING
+#define log(arg) printable(printable::empty + arg).__print()
+#else
+#define log(arg)
+#endif
+
+
+/**
+ * Printing, that always outputs to console
+ */
+#define print(arg) printable(printable::empty + arg).__print()
+
+#endif //CALCULUS_OUTPUT_H
