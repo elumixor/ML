@@ -7,6 +7,7 @@
 #define CALCULUS_DEF_H
 
 #include <string>
+#include <vector>
 
 // numeric type to be used
 using num = float;
@@ -16,19 +17,24 @@ using uint = unsigned int;
 
 // alias for str and const str reference
 using string = std::string;
-using cstring =const std::string &;
+using cstring = const std::string &;
 
-/** Converts object to string */
+template<typename T>
+using vector = std::vector<T>;
+template<typename T>
+using cvector = const std::vector<T> &;
+
+// Converts object to string
 #define to_string std::to_string
 
-/**
- * Tensor class
- */
-struct tensor;
-using ctensor = const tensor &;
+// tensor class
+#include "tensor.h"
 
 // Printing functions
 #include "printable.h"
+
+// exceptions
+#include "exceptions.h"
 
 /**
  * Logging, that is only called if ENABLE_LOGGING is defined
@@ -46,13 +52,13 @@ using ctensor = const tensor &;
 #define print(arg) printable(printable::empty + arg).__print()
 
 
-// casts
+// Casts
 #define __cast(v, type) static_cast<type>((v))
 
 #define to_int(v) __cast((v), int)
 #define to_num(v) __cast((v), num)
 
-// custom suffix to
+// Custom suffixes to convert to numeric type. These should always be used
 inline constexpr num operator "" _n(long double d) {
     return to_num(d);
 }
