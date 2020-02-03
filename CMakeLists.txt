@@ -10,4 +10,4 @@ add_definitions(-DENABLE_LOGGING)
 add_definitions(-DENABLE_ASSERTIONS)
 add_definitions(-DENABLE_EXCEPTIONS)
 
-add_executable(calculus src/main.cpp include/def.h include/tensor.h include/assertions.h include/exceptions.h include/output.h src/output.cpp src/tensor.cpp src/exceptions.cpp src/string_def.cpp include/functional.h src/functional.cpp include/conversions.h include/iterable.h)
+add_executable(calculus src/main.cpp include/def.h include/tensor.h include/assertions.h include/exceptions.h include/output.h src/output.cpp src/tensor.cpp src/exceptions.cpp src/string_def.cpp include/functional.h src/functional.cpp include/conversions.h include/iterable.h include/random.cpp include/random.h src/iterable.cpp)

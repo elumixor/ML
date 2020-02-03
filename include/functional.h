@@ -8,18 +8,17 @@
 #include "def.h"
 #include "assertions.h"
 
-#define __assert_vectors_same_size(a, b) assert(a.size() == b.size(), "Vectors should have same size. " + a.size() + " and " + b.size() + " received.")
+#define __assert_arrays_same_size(a, b) assert(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
+/**
+ * Compares two arrays element-wise.
+ * @tparam T Elements type.
+ * @param a First array.
+ * @param b Second array.
+ * @return True, if elements at same indices are equal.
+ */
 template<typename T>
-T mul(cvector<T> data) {
-    T res{1};
-    for (const auto &d : data)
-        res *= d;
-    return res;
-}
-
-template<typename T>
-bool operator==(cvector<T> a, cvector<T> b) {
+bool operator==(carray<T> a, carray<T> b) {
     auto size = a.size();
     if (b.size() != size) return false;
 
@@ -27,17 +26,42 @@ bool operator==(cvector<T> a, cvector<T> b) {
 
     return true;
 }
-
 /**
- * Dot product for two vectors
- * @tparam T Numeric type
- * @param a First vector
- * @param b Second vector
- * @return Number, dot product of a * b
+ * Multiplies all elements of array together.
+ * @tparam T Elements type.
+ * @param data Array.
+ * @return Product of all elements.
  */
 template<typename T>
-T operator*(cvector<T> a, cvector<T> b) {
-    __assert_vectors_same_size(a,b);
+T product(carray<T> data) {
+    T res{1};
+    for (const auto &d : data)
+        res *= d;
+    return res;
+}
+/**
+ * Adds all elements of array together.
+ * @tparam T Elements type.
+ * @param data Array.
+ * @return Sum of all elements.
+ */
+template<typename T>
+T sum(carray<T> data) {
+    T res{0};
+    for (const auto &d : data)
+        res += d;
+    return res;
+}
+/**
+ * Dot product for two vectors.
+ * @tparam T Numeric type.
+ * @param a First vector.
+ * @param b Second vector.
+ * @return Number, dot product of a * b.
+ */
+template<typename T>
+T operator*(carray<T> a, carray<T> b) {
+    __assert_arrays_same_size(a, b);
 
     auto size = a.size();
     T sum{0};

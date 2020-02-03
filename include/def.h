@@ -42,28 +42,28 @@ using string = std::string;
  */
 using cstring = const string &;
 /**
- * Alias for std::vector<T>
+ * Alias for std::array<T>
  * @tparam T data type
  */
 template<typename T>
-using vector = std::vector<T>;
+using array = std::vector<T>;
 /**
- * Alias for const vector reference
+ * Alias for const array reference
  */
 template<typename T>
-using cvector = const std::vector<T> &;
+using carray = const std::vector<T> &;
 /**
- * Numeric vector. Alias for vector<num>
+ * Numeric array. Alias for array<num>
  */
-using vec = vector<num>;
+using vec = array<num>;
 /**
  * Alias for const vec reference
  */
 using cvec = const vec &;
 /**
- * Vector of uints. Is mainly used to describe indices
+ * Array of uints. Is mainly used to describe indices
  */
-using vnat = vector<uint>;
+using vnat = array<uint>;
 /**
  * Alias for const vnat reference
  */
@@ -85,54 +85,54 @@ using std::to_string;
  */
 string to_string(ctensor tensor);
 /**
- * String representation of generic vector. Internally calls to_string on vector elements.
+ * String representation of generic arr. Internally calls to_string on arr elements.
  * Allows to specify custom opening bracket, closing bracket and separator
- * @tparam T Vector elements type
- * @param vector Vector of elements
+ * @tparam T Array elements type
+ * @param arr Array of elements
  * @param opening Opening bracket (defaults to '[')
  * @param closing Closing bracket  (defaults to ']')
  * @param sep Separator (defaults to ", ")
- * @return String representation of a vector
+ * @return String representation of a arr
  */
 template<typename T>
-string to_string(cvector<T> vector, char opening, char closing = ']', cstring sep = ", ") {
+string to_string(carray<T> arr, char opening, char closing = ']', cstring sep = ", ") {
     string result{opening};
 
-    val size{vector.size()};
+    val size{arr.size()};
     for (var i = 0u; i < size; ++i) {
-        result += to_string(vector[i]);
+        result += to_string(arr[i]);
         if (i < size - 1) result += sep;
     }
     result += closing;
     return result;
 }
 /**
- * String representation of generic vector. Internally calls to_string on vector elements.
+ * String representation of generic array. Internally calls to_string on array elements.
  * Allows to specify custom opening bracket, closing bracket and separator
- * @tparam T Vector elements type
- * @param vector Vector of elements
+ * @tparam T Array elements type
+ * @param arr Array of elements
  * @param opening Opening bracket (defaults to '[')
  * @param closing Closing bracket  (defaults to ']')
  * @param sep Separator (defaults to ", ")
- * @return String representation of a vector
+ * @return String representation of a array
  */
 template<typename T>
-string to_string(cvector<T> vector, char opening, char closing, char sep) {
-    return to_string(vector, opening, closing, to_string(sep));
+string to_string(carray<T> arr, char opening, char closing, char sep) {
+    return to_string(arr, opening, closing, to_string(sep));
 }
 /**
- * String representation of generic vector. Internally calls to_string on vector elements.
+ * String representation of generic array. Internally calls to_string on array elements.
  * Allows to specify custom opening bracket, closing bracket and separator
- * @tparam T Vector elements type
- * @param vector Vector of elements
+ * @tparam T Array elements type
+ * @param arr Array of elements
  * @param opening Opening bracket (defaults to '[')
  * @param closing Closing bracket  (defaults to ']')
  * @param sep Separator (defaults to ", ")
- * @return String representation of a vector
+ * @return String representation of a array
  */
 template<typename T>
-string to_string(cvector<T> vector) {
-    return to_string(vector, '[', ']', ", ");
+string to_string(carray<T> arr) {
+    return to_string(arr, '[', ']', ", ");
 }
 
 

@@ -14,6 +14,7 @@ struct printable {
     template<typename T>
     printable(const T &arg): str{to_string(arg)} {}
     printable(string str);
+    printable(const char& c);
     printable(const char *arg);
     void __print() const;
     operator string() const;
@@ -35,7 +36,6 @@ printable operator "" _pr(const char *str, size_t);
 #else
 #define log(arg)
 #endif
-
 
 /**
  * Printing, that always outputs to console

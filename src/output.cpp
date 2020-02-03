@@ -20,6 +20,7 @@ printable &printable::operator=(const string &x) {
     return *this;
 }
 printable::operator string() const { return str; }
+printable::printable(const char &c) : str{string(1, c)} {}
 printable operator+(const printable &a, const printable &b) {
     return printable(a.str + b.str);
 }
