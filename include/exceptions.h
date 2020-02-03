@@ -26,6 +26,11 @@ struct ml_assertion_failed : ml_exception {
     ml_assertion_failed(cstring file, int line, cstring msg = "Assertion failed.") : __init_ml_exception {}
 };
 
+struct ml_invalid_argument : ml_exception {
+    ml_invalid_argument(cstring file, int line, cstring msg = "Invalid argument.")
+            : __init_ml_exception {}
+};
+
 struct ml_not_implemented : ml_exception {
     ml_not_implemented(cstring file, int line, cstring msg = "Operation is not implemented.")
             : __init_ml_exception {}
@@ -33,7 +38,7 @@ struct ml_not_implemented : ml_exception {
 
 
 #ifdef ENABLE_EXCEPTIONS
-#define __error2(exception_type, message) throw exception_type(__FILE__, __LINE__, message)
+#define __error2(exception_type, message) throw exception_type(__FILE__, __LINE__, printable::empty + message)
 #define __error1(exception_type) throw exception_type(__FILE__, __LINE__)
 
 #define __get_error(_1, _2, NAME, ...) NAME

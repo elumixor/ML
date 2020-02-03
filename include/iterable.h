@@ -8,12 +8,20 @@
 #include "def.h"
 #include "conversions.h"
 
-#define assert_splice_size(start, size) assert(start < size, "Splice start index is greater then maximum index in array. " + start + " >= " + size)
-#define assert_splice_range(start, count, end, size) \
+#define __assert_splice_range(start, count, end, size) \
     assert(end <= size,\
     "Splice starting at " + start + " taking " + count + " elements overflows total number of elements. " +\
     end + " > " + size + ".")
 
+
+/**
+ * Selects elements from array, iterating in fixed step size, starting at offset.
+ * @tparam T Vector data type.
+ * @param source Source vector.
+ * @param step Step size.
+ * @param offset Starting index.
+ * @return New vector with elements at selected indices.
+ */
 template<typename T>
 vector<T> select(cvector<T> source, uint step = 1, uint offset = 0) {
     val size = source.size();
@@ -26,49 +34,74 @@ vector<T> select(cvector<T> source, uint step = 1, uint offset = 0) {
 
     return dest;
 }
-
-
+/**
+ * Selects elements from array at specified indices.
+ * @tparam T Vector data type.
+ * @param source Source vector.
+ * @param indices Indices vector.
+ * @return New vector with elements at selected indices.
+ */
 template<typename T>
-vector<T> slice(cvector<T> source, uint start) {
-    val size = source.size();
-    val count{size - start};
-    vector<T> dest(count);
+vector<T> select(cvector<T> source, cvnat indices) {
+    val size = indices.size();
 
-    for (var i{0u}; i < count; i++)
-        dest[i] = source[i + start];
+    vector<T> dest(size);
+
+    for (var i{0u}; i < size; ++i)
+        dest[i] = source[indices[i]];
 
     return dest;
 }
-
+/**
+ * Returns a portion of a vector.
+ * @tparam T Vector data type.
+ * @param source Source vector.
+ * @param start Start index. Specify negative number to count from the end.
+ * @param count Remove count. Specify negative number to remove all elements from start.
+ * @return Copy of array
+ */
 template<typename T>
-vector<T> slice(cvector<T> source, uint start, uint end) {
+vector<T> slice(cvector<T> source, int start = 0, int count = -1) {
     val size = source.size();
-    val count{end - start};
-    vector<T> dest(count);
 
-    for (var i{0u}; i < count; i++)
-        dest[i] = source[i + start];
+    val _start = to_uint(start >= 0 ? start : to_int(size) + start);
 
-    return dest;
+    if (_start >= size) error(ml_invalid_argument, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start);
+
+    if (count < 0)
+        return vector<T>(source.begin() + _start, source.end());
+
+    return vector<T>(source.begin() + _start, source.begin() + _start + count);
 }
-
+/**
+ * Removes range of elements from vector. Returns a copy.
+ * @tparam T Vector data type.
+ * @param source Source vector.
+ * @param start Start index. Specify negative number to count from the end.
+ * @param count Remove count. Specify negative number to remove all elements from start.
+ * @return Copy of modified array.
+ */
 template<typename T>
 vector<T> splice(cvector<T> source, int start, int count = 1) {
     val size = source.size();
-    val _start = to_uint(start > 0 ? start : to_int(size) - start);
+    val _start = to_uint(start > 0 ? start : to_int(size) + start);
 
     if (count < 0) {
-        assert_splice_size(_start, size)
-        return vector<T>(source.begin() + _start, source.end());
+//        __assert_index(_start, size)
+
+        return vector<T>(source.begin(), source.begin() + _start);
     }
 
     val _count = to_uint(count);
     val _end = _start + _count;
-    assert_splice_range(_start, _count, _end, size)
+
+    __assert_splice_range(_start, _count, _end, size)
 
     vector<T> result(size - _count);
+
     for (var i = 0u; i < _start; ++i)
         result[i] = source[i];
+
     for (var i = 0u; i < _count; ++i)
         result[_start + i] = source[_end + i];
 

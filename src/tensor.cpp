@@ -41,14 +41,13 @@ tensor::tensor(num element, cvnat dimensions) : rank{dimensions.size()}, dimensi
 
 vector<tensor> tensor::subdim() const {
     vector<tensor> results(dimensions[0], tensor(0, {dimensions.begin() + 1, dimensions.end()}));
-    const auto elements_count = elements.size() / dimensions[0]; // elements in each sub-dimension
+    val elements_count = elements.size() / dimensions[0]; // elements in each sub-dimension
 
     for (var i = 0u; i < dimensions[0]; ++i) {
         var &el = results[i].elements = vec(elements_count);
 
-        for (var j = 0u; j < elements_count; ++j) {
+        for (var j{0u}; j < elements_count; ++j)
             el[j] = elements[i * elements_count + j];
-        }
     }
 
     return results;
@@ -65,19 +64,19 @@ tensor &tensor::reshape(cvnat new_dim) {
 }
 tensor::operator num() const {
     assert(rank == 0, "Only rank 0 tensor can be converted into a scalar number. Found rank " + rank + " tensor");
+
     return elements[0];
 }
 tensor tensor::operator[](uint dim) const {
     assert(rank > 0, "Rank 0 tensor has no sub-dimensions.")
-    assert(dim < dimensions[0],
-           "Tried to get " + dim + " component in first dimension, while it only contains " + dimensions[0] +
-           " components.")
+    assert(dim < dimensions[0], "Tried to get " + dim + " component in first dimension, while it contains " + dimensions[0] + ".")
+
     return subdim()[dim];
 }
 tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
-    val dim_size{dimensions[dimension]};
+    val dim_size{dimension == 0 ? 1 : dimensions[dimension - 1]};
     val size = elements.size();
-    vec els(size / dim_size);
+    vec els(size / dimensions[dimension]);
 
     val elements_in_dim{dimension + 1 == rank ? 0 : mul(slice(dimensions, dimension + 1))};
     var k{dimension + 1 == rank ? offset : elements_in_dim * offset};
@@ -86,8 +85,10 @@ tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
     for (var d{0u}; d < dim_size; d++) {
         for (var i{0u}; i < elements_in_dim; i++)
             els[j++] = elements[k++];
+
         k += elements_in_dim;
     }
+
     if (!flatten) {
         vnat new_dims(dimensions);
         new_dims[dimension] = 1;
