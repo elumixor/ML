@@ -19,6 +19,8 @@ using uint = unsigned int;
 using string = std::string;
 using cstring = const std::string &;
 
+#define var auto
+#define val const auto
 
 template<typename T>
 using vector = std::vector<T>;

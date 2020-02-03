@@ -9,13 +9,13 @@
 #include "output.h"
 
 /** We define assert as a macro to let message be lazily-evaluated */
-#define __assert1(condition) if (!(condition)) { throw ml_assertion_failed(); }
-#define __assert2(condition, message) if (!(condition)) { throw ml_assertion_failed((printable::empty + message + "\n")); }
-// helper for overloading number of assert arguments
-#define GET_MACRO(_1, _2, NAME, ...) NAME
-
 #ifdef ENABLE_ASSERTIONS
-#define assert(...) GET_MACRO(__VA_ARGS__, __assert2, __assert1)(__VA_ARGS__)
+
+#define __assert1(condition) if (!(condition)) { error(ml_assertion_failed); }
+#define __assert2(condition, message) if (!(condition)) { error(ml_assertion_failed, (printable::empty + message + printable::new_line)); }
+#define __get_assertion(_1, _2, NAME, ...) NAME
+#define assert(...) __get_assertion(__VA_ARGS__, __assert2, __assert1)(__VA_ARGS__)
+
 #else
 #define assert(...)
 #endif

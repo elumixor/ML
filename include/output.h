@@ -6,7 +6,6 @@
 #define CALCULUS_OUTPUT_H
 
 #include "def.h"
-#include "string_def.h"
 
 struct printable {
     string str;
@@ -19,7 +18,9 @@ struct printable {
     void __print() const;
     operator string() const;
     printable &operator=(const string &x);
+
     static printable empty;
+    static printable new_line;
 };
 
 printable operator+(const printable &a, const printable &b);
@@ -37,6 +38,7 @@ printable operator+(const printable &a, const printable &b);
 /**
  * Printing, that always outputs to console
  */
-#define print(arg) printable(printable::empty + arg).__print()
+#define print(arg) (printable::empty + arg).__print()
+#define print_line() printable::empty.__print()
 
 #endif //CALCULUS_OUTPUT_H

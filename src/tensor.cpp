@@ -2,9 +2,10 @@
 // Created by vlado on 2/2/20.
 //
 
-#include "../include/tensor.h"
-#include "../include/assertions.h"
-#include "../include/functional.h"
+#include "tensor.h"
+#include "assertions.h"
+#include "functional.h"
+#include "iterable.h"
 
 #include <utility>
 
@@ -19,6 +20,9 @@
 // constructors
 tensor::tensor() : rank{0}, dimensions{0}, elements{0} {}
 tensor::tensor(std::initializer_list<num> elements) : rank{1}, dimensions{elements.size()}, elements{elements} {}
+tensor::tensor(vec elements, dim dimensions) : rank{dimensions.size()}, dimensions{std::move(dimensions)},
+                                               elements{std::move(elements)} {}
+
 tensor::tensor(std::initializer_list<tensor> elements) : rank{elements.begin()->rank + 1}, dimensions(rank) {
     const auto &b = *elements.begin();
     uint size{0u};
@@ -44,19 +48,50 @@ vector<tensor> tensor::subdim() const {
     vector<tensor> results(dimensions[0], tensor({dimensions.begin() + 1, dimensions.end()}, 0));
     const auto elements_count = elements.size() / dimensions[0]; // elements in each sub-dimension
 
-    for (auto i = 0u; i < dimensions[0]; ++i) {
-        auto &el = results[i].elements = vec(elements_count);
+    for (var i = 0u; i < dimensions[0]; ++i) {
+        var &el = results[i].elements = vec(elements_count);
 
-        for (auto j = 0u; j < elements_count; ++j) {
+        for (var j = 0u; j < elements_count; ++j) {
             el[j] = elements[i * elements_count + j];
         }
     }
 
     return results;
 }
-
 num tensor::element(cdim index) const {
     return elements[index * dimensions];
+}
+tensor tensor::reshaped(cdim new_dim) const {
+    return tensor(elements, new_dim);
+}
+tensor &tensor::reshape(cdim new_dim) {
+    this->dimensions = new_dim;
+    return *this;
+}
+tensor::operator num() const {
+    assert(rank == 0, "Only rank 0 tensor can be converted into a scalar number. Found rank " + rank + " tensor");
+    return elements[0];
+}
+tensor tensor::operator[](uint dim) const {
+    assert(rank > 0, "Rank 0 tensor has no sub-dimensions.")
+    assert(dim < dimensions[0],
+           "Tried to get " + dim + " component in first dimension, while it only contains " + dimensions[0] +
+           " components.")
+    return subdim()[dim];
+}
+tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
+    val dim_size{dimensions[dimension]};
+    vec els{select(elements, dim_size, offset)};
+
+    if (!flatten) {
+        dim new_dims(dimensions);
+        new_dims[dimension] = 1;
+        return tensor(els, new_dims);
+    }
+
+    dim new_dims{splice(dimensions, dimension)};
+
+    return tensor(els, new_dims);
 }
 
 tensor operator+(ctensor a, ctensor b) {

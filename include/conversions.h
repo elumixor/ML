@@ -12,6 +12,7 @@
 
 #define to_int(v) __cast((v), int)
 #define to_num(v) __cast((v), num)
+#define to_uint(v) __cast((v), uint)
 
 // Custom suffixes to convert to numeric type. These should always be used
 inline constexpr num operator "" _n(long double d) {
@@ -20,7 +21,5 @@ inline constexpr num operator "" _n(long double d) {
 inline constexpr num operator "" _n(unsigned long long d) {
     return to_num(d);
 }
-
-printable operator "" _pr(const char *str, size_t);
 
 #endif //CALCULUS_CONVERSIONS_H

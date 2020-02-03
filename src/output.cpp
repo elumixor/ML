@@ -8,6 +8,8 @@
 #include "../include/output.h"
 
 printable printable::empty{};
+printable printable::new_line{"\n"};
+
 printable::printable(const char *arg) : str{string(arg)} {}
 void printable::__print() const {
     std::cout << str << std::endl;

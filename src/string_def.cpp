@@ -4,7 +4,6 @@
 
 #include "../include/def.h"
 #include "../include/tensor.h"
-#include "../include/string_def.h"
 
 
 string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
@@ -29,5 +28,6 @@ string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
 }
 
 string to_string(ctensor tensor) {
+    if (tensor.rank == 0) return to_string(tensor.elements[0]);
     return "T"_pr + tensor.rank + to_string(tensor.dimensions, '(', ')') + "\n" + format_elements(tensor);
 }
