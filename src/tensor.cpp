@@ -22,7 +22,7 @@ tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->ra
         dimensions[j] = b.dimensions[j - 1];
 
     for (const auto &item : tensors)
-        size += item.elements.size();
+        size += item.size();
 
     this->elements.reserve(size);
 
@@ -58,7 +58,7 @@ tensor tensor::operator[](uint component) const {
 }
 array<tensor> tensor::subdim() const {
     array<tensor> results(dimensions[0], tensor({dimensions.begin() + 1, dimensions.end()}, 0));
-    val elements_count = elements.size() / dimensions[0]; // elements in each sub-dimension
+    val elements_count = size() / dimensions[0]; // elements in each sub-dimension
 
     for (var i = 0u; i < dimensions[0]; ++i) {
         var &el = results[i].elements = vec(elements_count);
@@ -76,7 +76,7 @@ tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
     check(offset < component, "Offset " + offset + " is out of bounds. " + component + " components in dimension in total.");
 
     val parent_component{product(splice(dimensions, dimension, -1))};
-    val subdim_elements{elements.size() / (parent_component * component)};
+    val subdim_elements{size() / (parent_component * component)};
     val stride{subdim_elements * (component - 1)};
     vec els(subdim_elements * parent_component);
 
@@ -99,6 +99,9 @@ tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
     vnat new_dims{splice(dimensions, dimension)};
     return tensor(new_dims, els);
 }
+num tensor::element(cvnat index) const {
+    return elements[index * dimensions];
+}
 
 tensor operator+(ctensor a, ctensor b) {
     check(a.dimensions == b.dimensions, "Tensors should have same dimensions. Received " + a.dimensions + " and " + b.dimensions + ".")
@@ -106,6 +109,6 @@ tensor operator+(ctensor a, ctensor b) {
     tensor result(a);
     return a;
 }
-num tensor::element(cvnat index) const {
-    return elements[index * dimensions];
-}
+num sum(const tensor &t) { return sum(t.elements); }
+num mean(const tensor &t) { return sum(t) / t.size(); }
+

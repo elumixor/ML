@@ -25,6 +25,37 @@ struct tensor {
     /** Numbers */
     vec elements;
 
+    /* Properties */
+    /** Number of elements in tensor */
+    [[nodiscard]] inline uint size() const { return elements.size(); }
+    /**
+     * Returns element at index
+     * @param index Array of indices on dimensions
+     * @return Element at indices
+     */
+    [[nodiscard]] num element(cvnat index) const;
+
+    /* Sub-dimensions*/
+    /**
+     * Returns array of tensors, that comprise highest sub-dimension.
+     * @return Array of tensors, that comprise highest sub-dimension.
+     */
+    [[nodiscard]] array<tensor> subdim() const;
+    /**
+     *
+     * @param dimension
+     * @param offset
+     * @param flatten
+     * @return
+     */
+    [[nodiscard]] tensor subdim(uint dimension, uint offset, bool flatten = true) const;
+    /**
+     * Get specific sub-dimension. Returns a tensor, containing elements of that dimension.
+     * @param component Index in dimension
+     * @return Tensor, containing elements of that dimension.
+     */
+    [[nodiscard]] tensor operator[](uint component) const;
+
     /* Constructors */
     /**
      * Creates a tensor from tensors
@@ -48,6 +79,8 @@ struct tensor {
      * @param dims Dimensions
      */
     tensor(vnat dims, num number);
+
+    /* Random tensors */
     /**
      * Creates a tensor of specific dimensions, with random elements, uniformly distributed
      * @param min Distribution minimum
@@ -64,29 +97,6 @@ struct tensor {
      */
     static tensor random_normal(cvnat dimensions, num mean = 0.5, num std = .5);
 
-    [[nodiscard]] num element(cvnat index) const;
-
-    /* Sub-dimensions*/
-    /**
-     * Returns array of tensors, that comprise highest sub-dimension.
-     * @return Array of tensors, that comprise highest sub-dimension.
-     */
-    [[nodiscard]] array<tensor> subdim() const;
-    /**
-     *
-     * @param dimension
-     * @param offset
-     * @param flatten
-     * @return
-     */
-    [[nodiscard]] tensor subdim(uint dimension, uint offset, bool flatten = true) const;
-    /**
-     * Get specific sub-dimension. Returns a tensor, containing elements of that dimension.
-     * @param component Index in dimension
-     * @return Tensor, containing elements of that dimension.
-     */
-    tensor operator[](uint component) const;
-
     /* Reshaping */
     /**
      * Reshapes a tensor to a new dimension in-place.
@@ -94,7 +104,6 @@ struct tensor {
      * @return Reference to reshaped tensor.
      */
     tensor &reshape(cvnat new_dim);
-
     /**
      * Reshapes a tensor to a new dimension. Returns a copy.
      * @param new_dim New dimensions.
@@ -106,6 +115,8 @@ struct tensor {
     /** Converting tensor to a scalar. Works only for 0-rank tensors */
     explicit operator num() const;
 };
+
+/* Operators*/
 
 tensor operator+(ctensor a, ctensor b);
 tensor operator-(ctensor a, ctensor b);
@@ -124,6 +135,12 @@ inline tensor operator*(ctensor a, num b) {
 inline tensor operator/(ctensor a, num b) {
     nimpl
 }
+
+/* Functions on tensors */
+/** Sum of elements of a tensor */
+num sum(ctensor t);
+/** Average of all elements of a tensor */
+num mean(ctensor t);
 
 
 #endif //CALCULUS_TENSOR_H
