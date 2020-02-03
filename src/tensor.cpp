@@ -74,19 +74,24 @@ tensor tensor::operator[](uint dim) const {
     return subdim()[dim];
 }
 tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
-    val dim_size{dimension == 0 ? 1 : dimensions[dimension - 1]};
-    val size = elements.size();
-    vec els(size / dimensions[dimension]);
+    check(dimension < rank, "Cannot subdim at dimension " + dimension + " of T" + rank + ".");
 
-    val elements_in_dim{dimension + 1 == rank ? 0 : mul(slice(dimensions, dimension + 1))};
-    var k{dimension + 1 == rank ? offset : elements_in_dim * offset};
+    val component{dimensions[dimension]};
+    check(offset < component, "Offset " + offset + " is out of bounds. " + component + " components in dimension in total.");
+
+    val parent_component{mul(splice(dimensions, dimension, -1))};
+    val subdim_elements{elements.size() / (parent_component * component)};
+    val stride{subdim_elements * (component - 1)};
+    vec els(subdim_elements * parent_component);
+
+    var k{offset * (subdim_elements)};
 
     var j{0u};
-    for (var d{0u}; d < dim_size; d++) {
-        for (var i{0u}; i < elements_in_dim; i++)
+    for (var i{0u}; i < parent_component; ++i) {
+        for (var l{0u}; l < subdim_elements; ++l) {
             els[j++] = elements[k++];
-
-        k += elements_in_dim;
+        }
+        k += stride;
     }
 
     if (!flatten) {

@@ -12,7 +12,6 @@
 
 template<typename T>
 T mul(cvector<T> data) {
-    if (data.size() < 1) return 0;
     T res{1};
     for (const auto &d : data)
         res *= d;

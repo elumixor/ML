@@ -59,7 +59,7 @@ vector<T> slice(cvector<T> source, int start = 0, int count = -1) {
     val size = source.size();
     val _start = to_uint(start >= 0 ? start : to_int(size) + start);
 
-    check(_start >= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
+    check(_start <= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
 
     if (count < 0)
         return vector<T>(source.begin() + _start, source.end());
