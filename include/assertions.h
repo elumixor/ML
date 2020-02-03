@@ -19,4 +19,11 @@
 #else
 #define assert(...)
 #endif
+
+#define __check1(condition) if (!(condition)) { error(ml_check_failed); }
+#define __check2(condition, message) if (!(condition)) { error(ml_check_failed, (printable::empty + message + printable::new_line)); }
+#define __get_check(_1, _2, NAME, ...) NAME
+#define check(...) __get_check(__VA_ARGS__, __check2, __check1)(__VA_ARGS__)
+
+
 #endif //CALCULUS_ASSERTIONS_H

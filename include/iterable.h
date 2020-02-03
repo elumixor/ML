@@ -8,12 +8,6 @@
 #include "def.h"
 #include "conversions.h"
 
-#define __assert_splice_range(start, count, end, size) \
-    assert(end <= size,\
-    "Splice starting at " + start + " taking " + count + " elements overflows total number of elements. " +\
-    end + " > " + size + ".")
-
-
 /**
  * Selects elements from array, iterating in fixed step size, starting at offset.
  * @tparam T Vector data type.
@@ -63,10 +57,9 @@ vector<T> select(cvector<T> source, cvnat indices) {
 template<typename T>
 vector<T> slice(cvector<T> source, int start = 0, int count = -1) {
     val size = source.size();
-
     val _start = to_uint(start >= 0 ? start : to_int(size) + start);
 
-    if (_start >= size) error(ml_invalid_argument, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start);
+    check(_start >= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
 
     if (count < 0)
         return vector<T>(source.begin() + _start, source.end());
@@ -84,26 +77,25 @@ vector<T> slice(cvector<T> source, int start = 0, int count = -1) {
 template<typename T>
 vector<T> splice(cvector<T> source, int start, int count = 1) {
     val size = source.size();
-    val _start = to_uint(start > 0 ? start : to_int(size) + start);
+    val _start = to_uint(start >= 0 ? start : to_int(size) + start);
 
-    if (count < 0) {
-//        __assert_index(_start, size)
+    check(_start < size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
 
+    if (count < 0)
         return vector<T>(source.begin(), source.begin() + _start);
-    }
 
     val _count = to_uint(count);
-    val _end = _start + _count;
+    val _end{_start + _count};
 
-    __assert_splice_range(_start, _count, _end, size)
+    check(_end <= size, "Splice end's index was out of bounds. " + _start + " + " + _count + " = " + _end + " > " + size + ".")
 
     vector<T> result(size - _count);
 
     for (var i = 0u; i < _start; ++i)
         result[i] = source[i];
 
-    for (var i = 0u; i < _count; ++i)
-        result[_start + i] = source[_end + i];
+    for (var i = _end; i < size; ++i)
+        result[i - _count] = source[i];
 
     return result;
 }

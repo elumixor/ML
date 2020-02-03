@@ -26,8 +26,8 @@ struct ml_assertion_failed : ml_exception {
     ml_assertion_failed(cstring file, int line, cstring msg = "Assertion failed.") : __init_ml_exception {}
 };
 
-struct ml_invalid_argument : ml_exception {
-    ml_invalid_argument(cstring file, int line, cstring msg = "Invalid argument.")
+struct ml_check_failed : ml_exception {
+    ml_check_failed(cstring file, int line, cstring msg = "Invalid argument.")
             : __init_ml_exception {}
 };
 
