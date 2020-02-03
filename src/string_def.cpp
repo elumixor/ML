@@ -2,9 +2,8 @@
 // Created by vlado on 2/2/20.
 //
 
-#include "../include/def.h"
-#include "../include/tensor.h"
-
+#include "def.h"
+#include "tensor.h"
 
 string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
     if (tensor.rank == 1) return to_string(tensor.elements);

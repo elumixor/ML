@@ -18,11 +18,36 @@ template<typename T>
 vector<T> select(cvector<T> source, uint step = 1, uint offset = 0) {
     val size = source.size();
 
-    vec dest(size / step);
+    vector<T> dest(size / step);
 
     var j{0};
     for (var i = offset; i < size; i += step)
-        dest[j] = source[i];
+        dest[j++] = source[i];
+
+    return dest;
+}
+
+
+template<typename T>
+vector<T> slice(cvector<T> source, uint start) {
+    val size = source.size();
+    val count{size - start};
+    vector<T> dest(count);
+
+    for (var i{0u}; i < count; i++)
+        dest[i] = source[i + start];
+
+    return dest;
+}
+
+template<typename T>
+vector<T> slice(cvector<T> source, uint start, uint end) {
+    val size = source.size();
+    val count{end - start};
+    vector<T> dest(count);
+
+    for (var i{0u}; i < count; i++)
+        dest[i] = source[i + start];
 
     return dest;
 }

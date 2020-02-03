@@ -8,34 +8,49 @@
 #include "def.h"
 #include "assertions.h"
 
-using dim = vector<uint>;
-using cdim = const dim &;
-using vec = vector<num>;
-using cvec = const vec &;
+
+/**
+ *
+ */
 
 /**
  * Tensor class
  */
 struct tensor {
+    /**
+     * Tensor rank (number of dimensions)
+     */
     uint rank;
-    dim dimensions;
+    /**
+     * Tensor dimensions
+     */
+    vnat dimensions;
     vec elements;
 
-    tensor();
+    /**
+     * Create tensor from elements (scalars)
+     * @param elements Scalar numbers
+     */
     tensor(std::initializer_list<num> elements);
-    tensor(vec elements, dim dimensions);
+    /**
+     * Create tensor from elements (tensors)
+     * @param elements Nested tensors
+     */
     tensor(std::initializer_list<tensor> elements);
-    tensor(dim dimensions, num element);
+    // From elements with specific dimensions
+    tensor(vec elements, vnat dimensions);
+    // Same element repeated
+    tensor(num element, cvnat dimensions);
 
-    num element(cdim index) const;
-    vector<tensor> subdim() const;
-    tensor subdim(uint dimension, uint offset, bool flatten = true) const;
+    [[nodiscard]] num element(cvnat index) const;
+    [[nodiscard]] vector<tensor> subdim() const;
+    [[nodiscard]] tensor subdim(uint dimension, uint offset, bool flatten = true) const;
 
     /** In-place reshaping */
-    tensor &reshape(cdim new_dim);
+    tensor &reshape(cvnat new_dim);
 
     /** Reshaping, that returns a copy */
-    tensor reshaped(cdim new_dim) const;
+    [[nodiscard]] tensor reshaped(cvnat new_dim) const;
 
     /** Converting tensor to a scalar. Works only for 0-rank tensors  */
     operator num() const;
@@ -50,7 +65,7 @@ tensor operator*(ctensor a, ctensor b);
 tensor operator/(ctensor a, ctensor b);
 
 inline tensor operator+(ctensor a, num b) {
-    return a + tensor(a.dimensions, b);
+    return a + tensor(b, a.dimensions);
 }
 inline tensor operator-(ctensor a, num b) {
     return a + -b;

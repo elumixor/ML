@@ -18,11 +18,7 @@
     assert(a.dimensions == b.dimensions, "Tensors should have same dimensions. Found " + a.dimensions + " and " + b.dimensions + ".")
 
 // constructors
-tensor::tensor() : rank{0}, dimensions{0}, elements{0} {}
 tensor::tensor(std::initializer_list<num> elements) : rank{1}, dimensions{elements.size()}, elements{elements} {}
-tensor::tensor(vec elements, dim dimensions) : rank{dimensions.size()}, dimensions{std::move(dimensions)},
-                                               elements{std::move(elements)} {}
-
 tensor::tensor(std::initializer_list<tensor> elements) : rank{elements.begin()->rank + 1}, dimensions(rank) {
     const auto &b = *elements.begin();
     uint size{0u};
@@ -40,12 +36,11 @@ tensor::tensor(std::initializer_list<tensor> elements) : rank{elements.begin()->
     for (const auto &element : elements)
         this->elements.insert(this->elements.end(), element.elements.begin(), element.elements.end());
 }
-
-tensor::tensor(dim dimensions, num element) : rank{dimensions.size()}, dimensions{std::move(dimensions)},
-                                              elements(mul(this->dimensions), element) {}
+tensor::tensor(vec elements, vnat dimensions) : rank{dimensions.size()}, dimensions{std::move(dimensions)}, elements{std::move(elements)} {}
+tensor::tensor(num element, cvnat dimensions) : rank{dimensions.size()}, dimensions{dimensions}, elements(mul(dimensions), element) {}
 
 vector<tensor> tensor::subdim() const {
-    vector<tensor> results(dimensions[0], tensor({dimensions.begin() + 1, dimensions.end()}, 0));
+    vector<tensor> results(dimensions[0], tensor(0, {dimensions.begin() + 1, dimensions.end()}));
     const auto elements_count = elements.size() / dimensions[0]; // elements in each sub-dimension
 
     for (var i = 0u; i < dimensions[0]; ++i) {
@@ -58,13 +53,13 @@ vector<tensor> tensor::subdim() const {
 
     return results;
 }
-num tensor::element(cdim index) const {
+num tensor::element(cvnat index) const {
     return elements[index * dimensions];
 }
-tensor tensor::reshaped(cdim new_dim) const {
+tensor tensor::reshaped(cvnat new_dim) const {
     return tensor(elements, new_dim);
 }
-tensor &tensor::reshape(cdim new_dim) {
+tensor &tensor::reshape(cvnat new_dim) {
     this->dimensions = new_dim;
     return *this;
 }
@@ -81,16 +76,25 @@ tensor tensor::operator[](uint dim) const {
 }
 tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
     val dim_size{dimensions[dimension]};
-    vec els{select(elements, dim_size, offset)};
+    val size = elements.size();
+    vec els(size / dim_size);
 
+    val elements_in_dim{dimension + 1 == rank ? 0 : mul(slice(dimensions, dimension + 1))};
+    var k{dimension + 1 == rank ? offset : elements_in_dim * offset};
+
+    var j{0u};
+    for (var d{0u}; d < dim_size; d++) {
+        for (var i{0u}; i < elements_in_dim; i++)
+            els[j++] = elements[k++];
+        k += elements_in_dim;
+    }
     if (!flatten) {
-        dim new_dims(dimensions);
+        vnat new_dims(dimensions);
         new_dims[dimension] = 1;
         return tensor(els, new_dims);
     }
 
-    dim new_dims{splice(dimensions, dimension)};
-
+    vnat new_dims{splice(dimensions, dimension)};
     return tensor(els, new_dims);
 }
 

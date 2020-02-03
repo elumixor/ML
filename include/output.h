@@ -25,6 +25,8 @@ struct printable {
 
 printable operator+(const printable &a, const printable &b);
 
+printable operator "" _pr(const char *str, size_t);
+
 /**
  * Logging, that is only called if ENABLE_LOGGING is defined
  */
