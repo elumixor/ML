@@ -3,7 +3,7 @@
 //
 
 #include "def.h"
-#include "tensor.h"
+#include "math/tensor.h"
 
 string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
     if (tensor.rank == 1) return to_string(tensor.elements);

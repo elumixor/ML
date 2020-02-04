@@ -2,15 +2,17 @@
 // Created by vlado on 2/2/20.
 //
 
-#include "tensor.h"
+#include "math/tensor.h"
 #include "assertions.h"
-#include "functional.h"
+#include "math/matht.h"
 #include "iterable.h"
 
 #include <utility>
 #include <random.h>
+#include <functional>
 
 // constructors
+tensor::tensor() = default;
 tensor::tensor(std::initializer_list<num> numbers) : rank{1}, dimensions{numbers.size()}, elements{numbers} {}
 tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->rank + 1}, dimensions(rank) {
     const auto &b = *tensors.begin();
@@ -102,13 +104,38 @@ tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
 num tensor::element(cvnat index) const {
     return elements[index * dimensions];
 }
-
 tensor operator+(ctensor a, ctensor b) {
     check(a.dimensions == b.dimensions, "Tensors should have same dimensions. Received " + a.dimensions + " and " + b.dimensions + ".")
 
-    tensor result(a);
-    return a;
+    val size = a.size();
+    vec els(size);
+    for (var i{0u}; i < a.size(); ++i)
+        els[i] = a.elements[i] + b.elements[i];
+
+    return tensor(a.dimensions, els);
 }
-num sum(const tensor &t) { return sum(t.elements); }
-num mean(const tensor &t) { return sum(t) / t.size(); }
+tensor operator-(const tensor &a, const tensor &b) { return a + -1 * b; }
+tensor operator+(const tensor &a, num b) {
+    return a + tensor(a.dimensions, b);
+}
+tensor operator-(const tensor &a, num b) {
+    return a + -b;
+}
+tensor operator*(const tensor &a, num b) {
+    val size = a.size();
+    vec els(size);
+    for (var i{0u}; i < a.size(); ++i)
+        els[i] = a.elements[i] * b;
+
+    return tensor(a.dimensions, els);
+}
+tensor operator*(num b, const tensor &a) {
+    val size = a.size();
+    vec els(size);
+    for (var i{0u}; i < a.size(); ++i)
+        els[i] = a.elements[i] * b;
+
+    return tensor(a.dimensions, els);
+}
+tensor operator/(const tensor &a, num b) { return a * (to_num(1) / b); }
 

@@ -8,22 +8,17 @@
 #include "def.h"
 #include "assertions.h"
 
-
 /**
- *
- */
-
-/**
- * Tensor class
+ * Tensor class for ML
  */
 struct tensor {
     /* Fields */
     /** Tensor rank (number of dimensions) */
-    uint rank;
+    uint rank{0};
     /** Tensor dimensions */
-    vnat dimensions;
+    vnat dimensions{};
     /** Numbers */
-    vec elements;
+    vec elements{0};
 
     /* Properties */
     /** Number of elements in tensor */
@@ -57,6 +52,8 @@ struct tensor {
     [[nodiscard]] tensor operator[](uint component) const;
 
     /* Constructors */
+    /** Creates a default (scalar) tensor of rank 0 with single zero element  */
+    tensor();
     /**
      * Creates a tensor from tensors
      * @param tensors Array of tensors
@@ -120,27 +117,10 @@ struct tensor {
 
 tensor operator+(ctensor a, ctensor b);
 tensor operator-(ctensor a, ctensor b);
-tensor operator*(ctensor a, ctensor b);
-tensor operator/(ctensor a, ctensor b);
-
-inline tensor operator+(ctensor a, num b) {
-    return a + tensor(a.dimensions, b);
-}
-inline tensor operator-(ctensor a, num b) {
-    return a + -b;
-}
-inline tensor operator*(ctensor a, num b) {
-    nimpl
-}
-inline tensor operator/(ctensor a, num b) {
-    nimpl
-}
-
-/* Functions on tensors */
-/** Sum of elements of a tensor */
-num sum(ctensor t);
-/** Average of all elements of a tensor */
-num mean(ctensor t);
-
+tensor operator+(ctensor a, num b);
+tensor operator-(ctensor a, num b);
+tensor operator*(ctensor a, num b);
+tensor operator*(num b, ctensor a);
+tensor operator/(ctensor a, num b);
 
 #endif //CALCULUS_TENSOR_H

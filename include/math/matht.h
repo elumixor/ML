@@ -2,8 +2,8 @@
 // Created by vlado on 2/2/20.
 //
 
-#ifndef CALCULUS_FUNCTIONAL_H
-#define CALCULUS_FUNCTIONAL_H
+#ifndef CALCULUS_MATHT_H
+#define CALCULUS_MATHT_H
 
 #include "def.h"
 #include "assertions.h"
@@ -71,5 +71,11 @@ T operator*(carray<T> a, carray<T> b) {
     return sum;
 }
 
+/* Functions on tensors */
+/** Sum of elements of a tensor */
+num sum(ctensor t);
+/** Average of all elements of a tensor */
+num mean(ctensor t);
 
-#endif //CALCULUS_FUNCTIONAL_H
+
+#endif //CALCULUS_MATHT_H
