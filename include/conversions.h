@@ -6,7 +6,7 @@
 #define CALCULUS_CONVERSIONS_H
 
 
-#include "def.h"
+#include "declarations.h"
 
 #define __cast(v, type) static_cast<type>((v))
 

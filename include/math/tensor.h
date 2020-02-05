@@ -5,7 +5,7 @@
 #ifndef CALCULUS_TENSOR_H
 #define CALCULUS_TENSOR_H
 
-#include "def.h"
+#include "declarations.h"
 
 /**
  * Tensor class for ML
@@ -124,13 +124,5 @@ tensor operator-(ctensor a, num b);
 tensor operator*(ctensor a, num b);
 tensor operator*(num b, ctensor a);
 tensor operator/(ctensor a, num b);
-
-/* To string */
-/**
- * String representation of a tensor
- * @param tensor Tensor
- * @return String representation of a tensor
- */
-string to_string(ctensor tensor);
 
 #endif //CALCULUS_TENSOR_H

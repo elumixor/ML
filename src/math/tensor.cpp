@@ -8,7 +8,7 @@
 #include "iterable.h"
 
 #include <utility>
-#include <random.h>
+#include <math/random.h>
 #include <functional>
 
 // constructors
@@ -48,13 +48,13 @@ tensor &tensor::reshape(cvnat new_dim) {
     return *this;
 }
 tensor::operator num() const {
-    assert(rank == 0, "Only rank 0 tensor can be converted into a scalar number. Found rank " + rank + " tensor");
+    require(rank == 0, "Only rank 0 tensor can be converted into a scalar number. Found rank " + rank + " tensor");
 
     return elements[0];
 }
 tensor tensor::operator[](nat component) const {
-    assert(rank > 0, "Rank 0 tensor has no sub-dimensions.")
-    assert(component < dimensions[0],
+    require(rank > 0, "Rank 0 tensor has no sub-dimensions.")
+    require(component < dimensions[0],
            "Tried to get " + component + " component in first dimension, while it contains " + dimensions[0] + ".")
 
     return subdim()[component];

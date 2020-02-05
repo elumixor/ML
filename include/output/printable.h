@@ -5,7 +5,8 @@
 #ifndef CALCULUS_OUTPUT_H
 #define CALCULUS_OUTPUT_H
 
-#include "def.h"
+#include <declarations.h>
+#include <output/to_string.h>
 
 declare(printable) {
     string str;

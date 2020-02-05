@@ -10,4 +10,4 @@ add_definitions(-DENABLE_LOGGING)
 add_definitions(-DENABLE_ASSERTIONS)
 add_definitions(-DENABLE_EXCEPTIONS)
 
-add_executable(machine_learning src/main.cpp include/def.h include/math/tensor.h include/assertions.h include/exceptions.h include/output.h src/output.cpp src/math/tensor.cpp src/exceptions.cpp src/string_def.cpp include/math/matht.h src/math/matht.cpp include/conversions.h include/iterable.h include/random.cpp include/random.h src/iterable.cpp include/nn/network.h src/nn/network.cpp include/nn/layer.h include/nn/function.h src/nn/function.cpp src/nn/layer.cpp)
+add_executable(machine_learning src/main.cpp include/declarations.h include/math/tensor.h include/assertions.h include/exceptions.h include/output/printable.h src/output/printable.cpp src/math/tensor.cpp src/exceptions.cpp src/output/to_string.cpp include/math/matht.h src/math/matht.cpp include/conversions.h include/iterable.h src/math/random.cpp include/math/random.h src/iterable.cpp include/nn/network.h src/nn/network.cpp include/nn/layer.h include/nn/function.h src/nn/function.cpp src/nn/layer.cpp include/output/to_string.h)

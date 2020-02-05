@@ -5,7 +5,7 @@
 #ifndef CALCULUS_ITERABLE_H
 #define CALCULUS_ITERABLE_H
 
-#include "def.h"
+#include "declarations.h"
 #include "conversions.h"
 #include "assertions.h"
 

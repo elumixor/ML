@@ -1,58 +1,15 @@
 //
-// Created by vlado on 2/2/20.
-// This file includes type definitions and aliases, used in project
+// Created by Vladyslav Yazykov on 06/02/2020.
 //
 
-#ifndef CALCULUS_DEF_H
-#define CALCULUS_DEF_H
+#ifndef MACHINE_LEARNING_TO_STRING_H
+#define MACHINE_LEARNING_TO_STRING_H
 
-#include <string>
-#include <vector>
+#include <declarations.h>
+#include <math/tensor.h>
+#include <nn/layer.h>
+#include <nn/network.h>
 
-/* Auto type declarations aliases */
-/** Variable auto type */
-#define var auto
-/** Constant auto type */
-#define val const auto
-/** Variable auto type reference */
-#define cvar auto &
-/** Constant auto type reference */
-#define cval const auto &
-
-/* Macros for defining structs with aliasing for const reference */
-#define __cref(type) using c ## type = const type &
-#define declare(type) struct type; __cref(type); struct type
-#define alias(new_type, aliased_type) using new_type = aliased_type; __cref(new_type)
-
-/* Macro to */
-#define copy_override(base_type, self_type)         \
-[[nodiscard]] base_type *copy() const override {    \
-    return new self_type(*this);                    \
-}
-
-/* Forward declarations */
-struct ml_not_implemented;
-struct printable;
-
-/* Type aliases */
-/** Numeric type. (defaults to float) */
-alias(num, float);
-/** Natural number, used for indexing */
-alias(nat, size_t);
-/** Alias for std::string */
-alias(string, std::string);
-/** Alias for std::array<T> @tparam T data type */
-template<typename T> using array = std::vector<T>;
-/** Alias for const array reference */
-template<typename T> using carray = const std::vector<T> &;
-/** Alias for initializer lise */
-template<typename T> using params=std::initializer_list<T>;
-/** Numeric array. Alias for array<num> */
-alias(vec, array<num>);
-/** Array of natural numbers. Is mainly used to describe indices */
-alias(vnat, array<nat>);
-/** Alias for std::to_string function */
-using std::to_string;
 
 /* to_string() declarations and template definitions */
 /**
@@ -108,12 +65,27 @@ template<typename T>
 string to_string(carray<T> arr) {
     return to_string(arr, '[', ']', ", ");
 }
+/**
+ * Generic string representation of a pointer to some object.
+ * @tparam T Type of a pointer
+ * @param data Pointer
+ * @return String representation of pointer to an object
+ */
 template<typename T>
 string to_string(const T *data) {
     char str[15];
     sprintf(str, "0x%x", data);
     return string("<") + string(typeid(*data).name()) + " at " + string(str) + ">";
 }
+/**
+ * String representation of a tensor
+ * @param tensor Tensor
+ * @return String representation of a tensor
+ */
+string to_string(ctensor tensor);
+/** String representation of a layer */
+string to_string(clayer);
+/** String representation of a network */
+string to_string(cnetwork);
 
-
-#endif //CALCULUS_DEF_H
+#endif //MACHINE_LEARNING_TO_STRING_H

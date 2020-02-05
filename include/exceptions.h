@@ -5,7 +5,7 @@
 #ifndef CALCULUS_EXCEPTIONS_H
 #define CALCULUS_EXCEPTIONS_H
 
-#include "def.h"
+#include "declarations.h"
 #include <exception>
 #include <utility>
 

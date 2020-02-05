@@ -2,8 +2,8 @@
 // Created by vlado on 2/2/20.
 //
 
-#include <def.h>
-#include <output.h>
+#include <declarations.h>
+#include <output/printable.h>
 #include <math/tensor.h>
 #include <nn/network.h>
 

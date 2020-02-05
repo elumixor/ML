@@ -5,12 +5,9 @@
 #ifndef CALCULUS_NETWORK_H
 #define CALCULUS_NETWORK_H
 
-
+#include <declarations.h>
 #include <math/tensor.h>
-#include <def.h>
-#include <output.h>
-#include "layer.h"
-
+#include <nn/layer.h>
 
 declare(network) {
     /* Fields */
@@ -69,9 +66,5 @@ network operator>>(network net, const T &l) {
     net.layers.push_back(new T(l));
     return net;
 }
-
-/* String definitions */
-/** String representation of a network */
-string to_string(cnetwork);
 
 #endif //CALCULUS_NETWORK_H

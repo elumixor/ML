@@ -3,7 +3,7 @@
 //
 
 #include <random>
-#include "random.h"
+#include "math/random.h"
 
 std::random_device device;
 std::default_random_engine engine(device());

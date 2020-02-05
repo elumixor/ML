@@ -2,7 +2,7 @@
 // Created by vlado on 3/2/20.
 //
 
-#include <random.h>
+#include <math/random.h>
 #include "iterable.h"
 
 vec vec_uniform(nat size, num min, num max) {

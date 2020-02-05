@@ -5,11 +5,11 @@
 #ifndef CALCULUS_MATHT_H
 #define CALCULUS_MATHT_H
 
-#include <def.h>
+#include <declarations.h>
 #include <math/tensor.h>
 #include <assertions.h>
 
-#define __assert_arrays_same_size(a, b) assert(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
+#define __require_arrays_same_size(a, b) require(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
 /**
  * Compares two arrays element-wise.
@@ -62,7 +62,7 @@ T sum(carray<T> data) {
  */
 template<typename T>
 T operator*(carray<T> a, carray<T> b) {
-    __assert_arrays_same_size(a, b);
+    __require_arrays_same_size(a, b);
 
     auto size = a.size();
     T sum{0};

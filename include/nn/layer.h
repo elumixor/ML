@@ -6,7 +6,7 @@
 #define CALCULUS_LAYER_H
 
 
-#include <def.h>
+#include <declarations.h>
 #include <math/tensor.h>
 
 #define layer_name(n)                                                       \
@@ -50,9 +50,5 @@ declare(layer) {
      */
     [[nodiscard]] virtual layer *copy() const = 0;
 };
-
-/* String definitions */
-/** String representation of a layer */
-string to_string(clayer);
 
 #endif //CALCULUS_LAYER_H
