@@ -6,15 +6,14 @@
 #define CALCULUS_TENSOR_H
 
 #include "def.h"
-#include "assertions.h"
 
 /**
  * Tensor class for ML
  */
-struct tensor {
+declare(tensor) {
     /* Fields */
     /** Tensor rank (number of dimensions) */
-    uint rank{0};
+    nat rank{0};
     /** Tensor dimensions */
     vnat dimensions{};
     /** Numbers */
@@ -22,7 +21,7 @@ struct tensor {
 
     /* Properties */
     /** Number of elements in tensor */
-    [[nodiscard]] inline uint size() const { return elements.size(); }
+    [[nodiscard]] inline nat size() const { return elements.size(); }
     /**
      * Returns element at index
      * @param index Array of indices on dimensions
@@ -43,13 +42,13 @@ struct tensor {
      * @param flatten
      * @return
      */
-    [[nodiscard]] tensor subdim(uint dimension, uint offset, bool flatten = true) const;
+    [[nodiscard]] tensor subdim(nat dimension, nat offset, bool flatten = true) const;
     /**
      * Get specific sub-dimension. Returns a tensor, containing elements of that dimension.
      * @param component Index in dimension
      * @return Tensor, containing elements of that dimension.
      */
-    [[nodiscard]] tensor operator[](uint component) const;
+    [[nodiscard]] tensor operator[](nat component) const;
 
     /* Constructors */
     /** Creates a default (scalar) tensor of rank 0 with single zero element  */
@@ -111,6 +110,9 @@ struct tensor {
     /* Conversions */
     /** Converting tensor to a scalar. Works only for 0-rank tensors */
     explicit operator num() const;
+    /** Implicit conversion from vector */
+    tensor(vec numbers);
+
 };
 
 /* Operators*/
@@ -122,5 +124,13 @@ tensor operator-(ctensor a, num b);
 tensor operator*(ctensor a, num b);
 tensor operator*(num b, ctensor a);
 tensor operator/(ctensor a, num b);
+
+/* To string */
+/**
+ * String representation of a tensor
+ * @param tensor Tensor
+ * @return String representation of a tensor
+ */
+string to_string(ctensor tensor);
 
 #endif //CALCULUS_TENSOR_H

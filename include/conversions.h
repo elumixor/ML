@@ -12,7 +12,7 @@
 
 #define to_int(v) __cast((v), int)
 #define to_num(v) __cast((v), num)
-#define to_uint(v) __cast((v), uint)
+#define to_nat(v) __cast((v), nat)
 
 // Custom suffixes to convert to numeric type. These should always be used
 inline constexpr num operator "" _n(long double d) {

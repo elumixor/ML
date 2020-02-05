@@ -9,6 +9,17 @@
 #include "conversions.h"
 #include "assertions.h"
 
+/* Reverse iterable */
+template <typename T>
+struct reversion_wrapper { T& iterable; };
+template <typename T>
+auto begin (reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
+template <typename T>
+auto end (reversion_wrapper<T> w) { return std::rend(w.iterable); }
+/** Reversed iterator */
+template <typename T>
+reversion_wrapper<T> reverse (T&& iterable) { return { iterable }; }
+
 /**
  * Selects elements from array, iterating in fixed step size, starting at offset.
  * @tparam T Array data type.
@@ -18,7 +29,7 @@
  * @return New array with elements at selected indices.
  */
 template<typename T>
-array<T> select(carray<T> source, uint step = 1, uint offset = 0) {
+array<T> select(carray<T> source, nat step = 1, nat offset = 0) {
     val size = source.size();
 
     array<T> dest(size / step);
@@ -58,7 +69,7 @@ array<T> select(carray<T> source, cvnat indices) {
 template<typename T>
 array<T> slice(carray<T> source, int start = 0, int count = -1) {
     val size = source.size();
-    val _start = to_uint(start >= 0 ? start : to_int(size) + start);
+    val _start = to_nat(start >= 0 ? start : to_int(size) + start);
 
     check(_start <= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
 
@@ -78,14 +89,14 @@ array<T> slice(carray<T> source, int start = 0, int count = -1) {
 template<typename T>
 array<T> splice(carray<T> source, int start, int count = 1) {
     val size = source.size();
-    val _start = to_uint(start >= 0 ? start : to_int(size) + start);
+    val _start = to_nat(start >= 0 ? start : to_int(size) + start);
 
     check(_start < size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
 
     if (count < 0)
         return array<T>(source.begin(), source.begin() + _start);
 
-    val _count = to_uint(count);
+    val _count = to_nat(count);
     val _end{_start + _count};
 
     check(_end <= size, "Splice end's index was out of bounds. " + _start + " + " + _count + " = " + _end + " > " + size + ".")
@@ -109,7 +120,7 @@ array<T> splice(carray<T> source, int start, int count = 1) {
  * @param max Distribution maximum
  * @return Vector with random numbers
  */
-vec vec_uniform(uint size, num min = 0, num max = 1);
+vec vec_uniform(nat size, num min = 0, num max = 1);
 /**
  * Creates a vector with random numbers, normally distributed
  * @param size Vector size
@@ -117,5 +128,5 @@ vec vec_uniform(uint size, num min = 0, num max = 1);
  * @param max Distribution standard deviation
  * @return Vector with random numbers
  */
-vec vec_normal(uint size, num mean = .5, num std = .5);
+vec vec_normal(nat size, num mean = .5, num std = .5);
 #endif //CALCULUS_ITERABLE_H

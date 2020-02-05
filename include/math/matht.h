@@ -5,8 +5,9 @@
 #ifndef CALCULUS_MATHT_H
 #define CALCULUS_MATHT_H
 
-#include "def.h"
-#include "assertions.h"
+#include <def.h>
+#include <math/tensor.h>
+#include <assertions.h>
 
 #define __assert_arrays_same_size(a, b) assert(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
@@ -22,7 +23,7 @@ bool operator==(carray<T> a, carray<T> b) {
     auto size = a.size();
     if (b.size() != size) return false;
 
-    for (uint i = 0; i < size; ++i) if (a[i] != b[i]) return false;
+    for (nat i = 0; i < size; ++i) if (a[i] != b[i]) return false;
 
     return true;
 }
@@ -70,6 +71,13 @@ T operator*(carray<T> a, carray<T> b) {
 
     return sum;
 }
+/**
+ * Tensor (outer) product for vecotrs and tensors
+ * @param a
+ * @param b
+ * @return
+ */
+tensor outer(ctensor a, ctensor b);
 
 /* Functions on tensors */
 /** Sum of elements of a tensor */

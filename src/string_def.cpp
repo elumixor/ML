@@ -2,10 +2,12 @@
 // Created by vlado on 2/2/20.
 //
 
-#include "def.h"
-#include "math/tensor.h"
+#include <def.h>
+#include <output.h>
+#include <math/tensor.h>
+#include <nn/network.h>
 
-string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
+string format_elements(ctensor tensor, nat depth = 1, bool not_last = false) {
     if (tensor.rank == 1) return to_string(tensor.elements);
 
     string res{'['};
@@ -29,4 +31,19 @@ string format_elements(ctensor tensor, uint depth = 1, bool not_last = false) {
 string to_string(ctensor tensor) {
     if (tensor.rank == 0) return to_string(tensor.elements[0]);
     return "T"_pr + tensor.rank + to_string(tensor.dimensions, '(', ')') + "\n" + format_elements(tensor);
+}
+string to_string(clayer layer) {
+    return layer.name();
+}
+string to_string(cnetwork net) {
+    string str{"NN: "};
+    val size = net.layers.size();
+    for (var i{0u}; i < size; ++i) {
+        str += to_string(*net.layers[i]);
+
+        if (i < size - 1)
+            str += " >> ";
+    }
+
+    return str;
 }

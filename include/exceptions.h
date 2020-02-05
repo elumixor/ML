@@ -12,28 +12,25 @@
 #define __init_ml_exception ml_exception(file, line, msg)
 
 /** Base for ML exceptions */
-struct ml_exception : virtual public std::exception {
+declare(ml_exception) : virtual public std::exception {
     string msg;
 
-    ml_exception(cstring file, int line, cstring msg = "ML Exception.") : msg{
-            msg + "\n\t" + file + ": " + to_string(line)} {}
+    ml_exception(cstring file, int line, cstring msg = "ML Exception.") : msg{msg + "\n\t" + file + ": " + to_string(line)} {}
     ~ml_exception() noexcept override;
     [[nodiscard]] const char *what() const noexcept override;
 };
 
 /** When assertion fails */
-struct ml_assertion_failed : ml_exception {
+declare(ml_assertion_failed) : ml_exception {
     ml_assertion_failed(cstring file, int line, cstring msg = "Assertion failed.") : __init_ml_exception {}
 };
 
-struct ml_check_failed : ml_exception {
-    ml_check_failed(cstring file, int line, cstring msg = "Invalid argument.")
-            : __init_ml_exception {}
+declare(ml_check_failed) : ml_exception {
+    ml_check_failed(cstring file, int line, cstring msg = "Invalid argument.") : __init_ml_exception {}
 };
 
-struct ml_not_implemented : ml_exception {
-    ml_not_implemented(cstring file, int line, cstring msg = "Operation is not implemented.")
-            : __init_ml_exception {}
+declare(ml_not_implemented) : ml_exception {
+    ml_not_implemented(cstring file, int line, cstring msg = "Operation is not implemented.") : __init_ml_exception {}
 };
 
 

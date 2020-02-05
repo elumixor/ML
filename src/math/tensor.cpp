@@ -16,7 +16,7 @@ tensor::tensor() = default;
 tensor::tensor(std::initializer_list<num> numbers) : rank{1}, dimensions{numbers.size()}, elements{numbers} {}
 tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->rank + 1}, dimensions(rank) {
     const auto &b = *tensors.begin();
-    uint size{0u};
+    nat size{0u};
 
     dimensions[0] = tensors.size();
 
@@ -33,6 +33,7 @@ tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->ra
 }
 tensor::tensor(vnat dims, vec numbers) : rank{dims.size()}, dimensions{std::move(dims)}, elements{std::move(numbers)} {}
 tensor::tensor(vnat dims, num number) : rank{dims.size()}, dimensions{std::move(dims)}, elements(product(this->dimensions), number) {}
+tensor::tensor(vec numbers) :rank{0}, dimensions{numbers.size()}, elements{std::move(numbers)} {}
 tensor tensor::random(cvnat dimensions, num min, num max) {
     return tensor(dimensions, vec_uniform(product(dimensions), min, max));
 }
@@ -51,7 +52,7 @@ tensor::operator num() const {
 
     return elements[0];
 }
-tensor tensor::operator[](uint component) const {
+tensor tensor::operator[](nat component) const {
     assert(rank > 0, "Rank 0 tensor has no sub-dimensions.")
     assert(component < dimensions[0],
            "Tried to get " + component + " component in first dimension, while it contains " + dimensions[0] + ".")
@@ -71,7 +72,7 @@ array<tensor> tensor::subdim() const {
 
     return results;
 }
-tensor tensor::subdim(uint dimension, uint offset, bool flatten) const {
+tensor tensor::subdim(nat dimension, nat offset, bool flatten) const {
     check(dimension < rank, "Cannot subdim at dimension " + dimension + " of T" + rank + ".");
 
     val component{dimensions[dimension]};

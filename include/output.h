@@ -7,18 +7,18 @@
 
 #include "def.h"
 
-struct printable {
+declare(printable) {
     string str;
 
     printable() = default;
     template<typename T>
     printable(const T &arg): str{to_string(arg)} {}
     printable(string str);
-    printable(const char& c);
+    printable(const char &c);
     printable(const char *arg);
     void __print() const;
     operator string() const;
-    printable &operator=(const string &x);
+    printable &operator=(cstring x);
 
     static printable empty;
     static printable new_line;

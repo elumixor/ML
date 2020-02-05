@@ -5,7 +5,7 @@
 #include <random.h>
 #include "iterable.h"
 
-vec vec_uniform(uint size, num min, num max) {
+vec vec_uniform(nat size, num min, num max) {
     vec result(size);
 
     for (var i{0u}; i < size; ++i)
@@ -13,7 +13,7 @@ vec vec_uniform(uint size, num min, num max) {
 
     return result;
 }
-vec vec_normal(uint size, num mean, num std) {
+vec vec_normal(nat size, num mean, num std) {
     vec result(size);
 
     for (var i{0u}; i < size; ++i)
