@@ -13,8 +13,8 @@
 
 // constructors
 tensor::tensor() = default;
-tensor::tensor(std::initializer_list<num> numbers) : rank{1}, dimensions{numbers.size()}, elements{numbers} {}
-tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->rank + 1}, dimensions(rank), elements{} {
+tensor::tensor(params<num> numbers) : rank{1}, dimensions{numbers.size()}, elements{numbers} {}
+tensor::tensor(params<tensor> tensors) : rank{tensors.begin()->rank + 1}, dimensions(rank), elements{} {
     const auto &b = *tensors.begin();
     nat size{0u};
 
@@ -31,13 +31,14 @@ tensor::tensor(std::initializer_list<tensor> tensors) : rank{tensors.begin()->ra
     for (cval element : tensors)
         this->elements.insert(this->elements.end(), element.elements.begin(), element.elements.end());
 }
-tensor::tensor(vnat dims, vec numbers) : rank{dims.size()}, dimensions{std::move(dims)}, elements{std::move(numbers)} {}
-tensor::tensor(vnat dims, num number) : rank{dims.size()}, dimensions{std::move(dims)}, elements(product(this->dimensions), number) {}
-tensor::tensor(vec numbers) : rank{0}, dimensions{numbers.size()}, elements{std::move(numbers)} {}
+tensor::tensor(vnat dimensions, vec elements) : rank{dimensions.size()}, move_init_s(dimensions), move_init_s(elements) {}
+tensor::tensor(vnat dimensions, num element) : rank{dimensions.size()}, move_init_s(dimensions),
+                                               elements(product(this->dimensions), element) {}
+tensor::tensor(vec elements) : rank{0}, dimensions{elements.size()}, move_init_s(elements) {}
 
 // Copy and move
 tensor::tensor(const tensor &other) = default;
-tensor::tensor(tensor &&other) noexcept : rank{other.rank}, dimensions{std::move(other.dimensions)}, elements{std::move(other.elements)} {}
+tensor::tensor(tensor &&other) noexcept : rank{other.rank}, move_init(dimensions, other), move_init(elements, other) {}
 tensor &tensor::operator=(ctensor other) {
     if (this == &other) return *this;
 
@@ -72,7 +73,6 @@ tensor &tensor::reshape(cvnat new_dim) {
     this->dimensions = new_dim;
     return *this;
 }
-
 num tensor::element(cvnat index) const {
     return elements[index * dimensions];
 }
@@ -96,6 +96,36 @@ tensor tensor::operator[](nat component) const {
 
     return subdim()[component];
 }
+vec tensor::vector(nat fixed_dim, cvnat indices) const {
+    var offset{0u};
+    var dim_size{1u};
+
+    const int fd = fixed_dim;
+    for (var k{to_int(rank - 1)}; k > fd; --k) {
+        offset += indices[k - 1] * dim_size;
+        dim_size *= dimensions[k];
+    }
+
+    dim_size *= dimensions[fixed_dim];
+
+    for (var k{fd - 1}; k >= 0; --k) {
+        offset += indices[k] * dim_size;
+        dim_size *= dimensions[k];
+    }
+
+    val step{product(slice(dimensions, to_nat(fixed_dim + 1), -1))};
+    vec result;
+    val elements_count{dimensions[fixed_dim]};
+    result.reserve(elements_count);
+
+    for (var j{0u}; j < elements_count; ++j) {
+        result.push_back(elements[offset]);
+        offset += step;
+    }
+
+    return result;
+}
+
 tensor tensor::subdim(nat dimension, nat offset, bool flatten) const {
     check(dimension < rank, "Cannot subdim at dimension " + dimension + " of T" + rank + ".");
 
@@ -126,7 +156,6 @@ tensor tensor::subdim(nat dimension, nat offset, bool flatten) const {
     vnat new_dims{splice(dimensions, dimension)};
     return tensor(new_dims, els);
 }
-
 tensor::operator num() const {
     require(rank == 0, "Only rank 0 tensor can be converted into a scalar number. Found rank " + rank + " tensor");
 

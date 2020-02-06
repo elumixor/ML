@@ -57,12 +57,12 @@ declare(tensor) {
      * Creates a tensor from tensors
      * @param tensors Array of tensors
      */
-    tensor(std::initializer_list<tensor> tensors);
+    tensor(params<tensor> tensors);
     /**
      * Creates a tensor from numbers
      * @param numbers Array of numbers
      */
-    tensor(std::initializer_list<num> numbers);
+    tensor(params<num> numbers);
     /**
      * Creates a tensor from elements with specific dimensions
      * @param numbers Array of numbers
@@ -71,10 +71,10 @@ declare(tensor) {
     tensor(vnat dims, vec numbers);
     /**
      * Creates a tensor from elements with specific dimensions
-     * @param number Number, to be repeated
+     * @param element Number, to be repeated
      * @param dims Dimensions
      */
-    tensor(vnat dims, num number);
+    tensor(vnat dims, num element);
 
     /* Copy and move*/
     tensor(ctensor);
@@ -119,32 +119,13 @@ declare(tensor) {
     /** Implicit conversion from vector */
     tensor(vec numbers);
 
-    /* Indices iterable */
-    declare(indices_iterable) {
-        vnat dimensions;
-
-        explicit indices_iterable(vnat dimensions);
-
-        /* Iterator  */
-        declare(indices_iterator) {
-            cvnat dimensions;
-            vnat indices;
-
-            explicit indices_iterator(cvnat dimensions);
-            indices_iterator(cvnat dimensions, vnat indices);
-
-            cvnat operator*() const;
-            const indices_iterator &operator++();
-            bool operator!=(cindices_iterator) const;
-        };
-
-        [[nodiscard]] indices_iterator begin() const;
-        [[nodiscard]] indices_iterator end() const;
-
-    };
-
-    /* Iterator yielding methods */
-    inline indices_iterable indices() { return indices_iterable(dimensions); }
+    /**
+     * Takes vector from tensor at indices
+     * @param fixed_dim Index of dimension, that is fixed, wrt to other dimensions. On that axis from this dimension the vector is taken.
+     * @param indices Indices in other dimensions.
+     * @return
+     */
+    [[nodiscard]] vec vector(nat fixed_dim, cvnat indices) const;
 };
 
 /* Operators*/

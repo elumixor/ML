@@ -35,13 +35,17 @@ tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b) {
 
     vnat dims(concat(d_a, d_b));
 
+    print(indices(d_a));
+    print(indices(d_b));
+
     // for all other dimensions
     tensor result(dims, 0);
 
-
-    // go through all subdimensions of a and b
-    for (var k{0u}; k < size_a; ++k)
-        result += a.subdim(dim_a, k) * b.subdim(dim_b, k);
+//    for (cval dim_indices : dims) {
+        // go through all subdimensions of a and b
+//        for (var k{0u}; k < size_a; ++k)
+//            result[dim_indices] += sum(a.subdim(dim_a, k) * b.subdim(dim_b, k), dim=???);
+//    }
 
     return result;
 }

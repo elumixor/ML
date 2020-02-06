@@ -25,7 +25,7 @@ tensor fc::operator()(ctensor input) {
 
     // Tensors component go as contravariant, covariant, contravariant, ...
     // Thus we initialize our weights as follows
-    //  weights = tensor::random({batch_size, output_size, input_size});
+    //  weights = tensor::random({output_size, input_size});
     //  input is (batch_size, 1, input_size)
     return computed = dot(weights, input, 1, 2) + bias;
 }

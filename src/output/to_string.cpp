@@ -3,9 +3,12 @@
 //
 
 #include <declarations.h>
-#include <output/printable.h>
 #include <math/tensor.h>
 #include <nn/network.h>
+#include <output/to_string.h>
+#include <output/printable.h>
+#include <math/matht.h>
+
 
 string format_elements(ctensor tensor, nat depth = 1, bool not_last = false) {
     if (tensor.rank == 1) return to_string(tensor.elements);
@@ -46,4 +49,15 @@ string to_string(cnetwork net) {
     }
 
     return str;
+}
+string to_string(const __indices_iterable &itr) {
+    array<vnat> result;
+
+    val size{product(itr.dimensions)};
+    result.reserve(size);
+
+    for (cval item : itr)
+        result.push_back(item);
+
+    return to_string(result, '[', ']', "\n ");
 }

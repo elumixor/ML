@@ -34,55 +34,57 @@
 //
 //    }
 //};
-struct A {
-    struct iterator {
-        using iterator_category = std::random_access_iterator_tag;
-
-        iterator(nat i = 0) : i_{i} {}
-
-
-        nat i_{0};
-        friend struct A;
-
-        long int operator*() const { return i_; }
-        const iterator &operator++() {
-            ++i_;
-            return *this;
-        }
-
-        iterator operator++(int) {
-            const iterator copy(*this);
-            ++i_;
-            return copy;
-        }
-
-        bool operator==(const iterator &other) const { return i_ == other.i_; }
-        bool operator!=(const iterator &other) const { return i_ != other.i_; }
-    };
-
-    [[nodiscard]] iterator begin() const { return iterator(); }
-    [[nodiscard]] iterator end() const { return iterator(10); }
-};
-
 
 int main() {
     tensor W{{1, 2},
              {3, 4}};
 
-    tensor x{{1, 1},
-             {1, 3}};
+    tensor x{{1, 2},
+             {1, 3},
+             {1, 4}};
 
-    A a;
+    tensor Y{{{1, 1}, {2, 2}},
+             {{1, 0}, {3, 5}},
+             {{1, 0}, {4, 5}}};
 
-    for (cval item: W.indices())
-        print(item);
 
-//    for (cval item : a)
-//        print(item);
+    print(x.dimensions);
+    print(x.vector(0, {0}));
+    print(x.vector(0, {1}));
 
-//    for
-//    print(W);
+    print(x.vector(1, {0}));
+    print(x.vector(1, {1}));
+    print(x.vector(1, {2}));
+
+    print_line();
+
+    print(W.vector(0, {0}));
+    print(W.vector(0, {1}));
+    print(W.vector(1, {0}));
+    print(W.vector(1, {1}));
+
+    print_line();
+    print(Y);
+    print_line();
+
+    print(Y.vector(0, {0, 0}));
+    print(Y.vector(1, {0, 0}));
+    print(Y.vector(2, {0, 0}));
+
+    print_line();
+    print(Y.vector(0, {1, 0}));
+    print(Y.vector(1, {1, 0}));
+    print(Y.vector(2, {1, 0}));
+    print_line();
+    print(Y.vector(0, {0, 1}));
+    print(Y.vector(1, {0, 1}));
+    print(Y.vector(2, {0, 1}));
+    print_line();
+    print(Y.vector(0, {1, 1}));
+    print(Y.vector(1, {1, 1}));
+    print(Y.vector(2, {1, 1}));
 //    print(dot(W, x, 0, 0));
+
 
 //    >>> a = np.arange(60.).reshape(3,4,5)
 //    >>> b = np.arange(24.).reshape(4,3,2)
