@@ -5,7 +5,7 @@
 #ifndef CALCULUS_TENSOR_H
 #define CALCULUS_TENSOR_H
 
-#include "declarations.h"
+#include <declarations.h>
 
 /**
  * Tensor class for ML
@@ -76,6 +76,12 @@ declare(tensor) {
      */
     tensor(vnat dims, num number);
 
+    /* Copy and move*/
+    tensor(ctensor);
+    tensor(tensor &&) noexcept;
+    tensor &operator=(ctensor);
+    tensor &operator=(tensor &&) noexcept;
+
     /* Random tensors */
     /**
      * Creates a tensor of specific dimensions, with random elements, uniformly distributed
@@ -113,14 +119,43 @@ declare(tensor) {
     /** Implicit conversion from vector */
     tensor(vec numbers);
 
+    /* Indices iterable */
+    declare(indices_iterable) {
+        vnat dimensions;
+
+        explicit indices_iterable(vnat dimensions);
+
+        /* Iterator  */
+        declare(indices_iterator) {
+            cvnat dimensions;
+            vnat indices;
+
+            explicit indices_iterator(cvnat dimensions);
+            indices_iterator(cvnat dimensions, vnat indices);
+
+            cvnat operator*() const;
+            const indices_iterator &operator++();
+            bool operator!=(cindices_iterator) const;
+        };
+
+        [[nodiscard]] indices_iterator begin() const;
+        [[nodiscard]] indices_iterator end() const;
+
+    };
+
+    /* Iterator yielding methods */
+    inline indices_iterable indices() { return indices_iterable(dimensions); }
 };
 
 /* Operators*/
 
 tensor operator+(ctensor a, ctensor b);
+tensor &operator+=(tensor &a, ctensor b);
 tensor operator-(ctensor a, ctensor b);
 tensor operator+(ctensor a, num b);
 tensor operator-(ctensor a, num b);
+// hadamard product
+tensor operator*(ctensor a, ctensor b);
 tensor operator*(ctensor a, num b);
 tensor operator*(num b, ctensor a);
 tensor operator/(ctensor a, num b);

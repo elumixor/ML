@@ -10,16 +10,72 @@
 #include "assertions.h"
 
 /* Reverse iterable */
-template <typename T>
-struct reversion_wrapper { T& iterable; };
-template <typename T>
-auto begin (reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
-template <typename T>
-auto end (reversion_wrapper<T> w) { return std::rend(w.iterable); }
+template<typename T>
+struct reversion_wrapper {
+    T &iterable;
+};
+template<typename T>
+auto begin(reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
+template<typename T>
+auto end(reversion_wrapper<T> w) { return std::rend(w.iterable); }
 /** Reversed iterator */
-template <typename T>
-reversion_wrapper<T> reverse (T&& iterable) { return { iterable }; }
+template<typename T>
+reversion_wrapper<T> reverse(T &&iterable) { return {iterable}; }
 
+/**
+ * Compares two arrays element-wise.
+ * @tparam T Elements type.
+ * @param a First array.
+ * @param b Second array.
+ * @return True, if elements at same indices are equal.
+ */
+template<typename T>
+bool operator==(carray<T> a, carray<T> b) {
+    auto size = a.size();
+    if (b.size() != size) return false;
+
+    for (nat i = 0; i < size; ++i) if (a[i] != b[i]) return false;
+
+    return true;
+}
+/**
+ * Compares two arrays element-wise.
+ * @tparam T Elements type.
+ * @param a First array.
+ * @param b Second array.
+ * @return True, arrays have different length or have different elements at same indices
+ */
+template<typename T>
+bool operator!=(carray<T> a, carray<T> b) { return !(a == b); }
+/**
+ * Creates an array with a range of numbers.
+ * @tparam T Array data type.
+ * @param count Total number of elements.
+ * @param start Starting element.
+ * @param step Difference between two elements.
+ * @return Created array with a range of numbers.
+ */
+template<typename T>
+array<T> range(nat count, T start = 0, T step = 1) {
+    array<T> result(count);
+    for (var i{0u}; i < count; ++i)
+        result[i] = start + step * i;
+
+    return result;
+}
+/**
+ * Creates a range of indices for array.
+ */
+template<typename T>
+vnat indices(array<T> arr) { return range(arr.size()); }
+/** Returns true if source array contains specific element. */
+template<typename T>
+bool contains(carray<T> source, T element) {
+    for (cval item : source)
+        if (item == element) return true;
+
+    return false;
+}
 /**
  * Selects elements from array, iterating in fixed step size, starting at offset.
  * @tparam T Array data type.
@@ -44,19 +100,73 @@ array<T> select(carray<T> source, nat step = 1, nat offset = 0) {
  * Selects elements from array at specified indices.
  * @tparam T Array data type.
  * @param source Source array.
- * @param indices Indices array.
+ * @param ind Indices array.
  * @return New array with elements at selected indices.
  */
 template<typename T>
-array<T> select(carray<T> source, cvnat indices) {
-    val size = indices.size();
+array<T> select(carray<T> source, cvnat ind) {
+    val size = ind.size();
+    check(source.size() >= size, "Source size was smaller then selected indices size. " + source.size() + " < " + size + ".")
 
     array<T> dest(size);
 
     for (var i{0u}; i < size; ++i)
-        dest[i] = source[indices[i]];
+        dest[i] = source[ind[i]];
 
     return dest;
+}
+/**
+ * Selects elements from array except elements at specified indices.
+ * @tparam T Array data type.
+ * @param source Source array.
+ * @param ind Indices array.
+ * @return New array with elements without elements at selected indices.
+ */
+template<typename T>
+array<T> unselect(carray<T> source, cvnat ind) {
+    val size = source.size();
+
+    check(size >= ind.size(), "Source size was smaller then selected indices size. " + size + " < " + ind.size() + ".")
+    array<T> dest(size - ind.size());
+
+    var j{0u};
+    for (var i{0u}; i < source.size(); ++i)
+        if (!contains<nat>(ind, i))
+            dest[j++] = source[i];
+
+    return dest;
+}
+/**
+ * Flattens array of arrays into a single one through concatenation.
+ */
+template<typename T>
+array<T> flatten(carray<carray<T>> arrays) {
+    var size{0u};
+    for (cval arr : arrays)
+        size += arr.size();
+
+    array<T> result;
+    result.reserve(size);
+
+    for (cval arr : arrays)
+        result.insert(result.end(), arr.begin(), arr.end());
+
+    return result;
+}
+/**
+ * Concatenates two arrays. New array will have all elements of the first array, followed by all elements of a second.
+ */
+template<typename T>
+array<T> concat(carray<T> a, carray<T> b) {
+    var size{a.size() + b.size()};
+
+    array<T> result;
+    result.reserve(size);
+
+    result.insert(result.end(), a.begin(), a.end());
+    result.insert(result.end(), b.begin(), b.end());
+
+    return result;
 }
 /**
  * Returns a portion of a array.
@@ -112,21 +222,4 @@ array<T> splice(carray<T> source, int start, int count = 1) {
     return result;
 }
 
-/* Random vectors */
-/**
- * Creates a vector with random numbers, uniformly distributed
- * @param size Vector size
- * @param min Distribution minimum
- * @param max Distribution maximum
- * @return Vector with random numbers
- */
-vec vec_uniform(nat size, num min = 0, num max = 1);
-/**
- * Creates a vector with random numbers, normally distributed
- * @param size Vector size
- * @param min Distribution mean
- * @param max Distribution standard deviation
- * @return Vector with random numbers
- */
-vec vec_normal(nat size, num mean = .5, num std = .5);
 #endif //CALCULUS_ITERABLE_H

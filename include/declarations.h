@@ -24,6 +24,11 @@
 #define declare(type) struct type; __cref(type); struct type
 #define alias(new_type, aliased_type) using new_type = aliased_type; __cref(new_type)
 
+#define copy_init(field, other) field{other.field}
+#define copy_init_s(field) field{field}
+#define move_init(field, other) field{std::move(other.field)}
+#define move_init_s(field) field{std::move(field)}
+
 /* Forward declarations */
 struct ml_not_implemented;
 struct printable;

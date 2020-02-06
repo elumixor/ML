@@ -19,10 +19,13 @@
  * Contains a differentiable function (tensor -> tensor) and may or may not have learnable parameters.
  */
 declare(layer) {
+    /** Static layer's name */
     static constexpr const char *s_name{"[layer]"};
-
     /** Layer's name, accessed via instance, due to virtual inheritance */
     [[nodiscard]] virtual const char *name() const { return s_name; }
+
+    /** Stored value of computation */
+    tensor computed;
 
     /** Virtual destructor */
     virtual ~layer() = default;
