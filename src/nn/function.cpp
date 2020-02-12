@@ -5,4 +5,4 @@
 
 #include <nn/function.h>
 
-void function::update(num) {}
+void function::update(scalar) {}

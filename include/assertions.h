@@ -5,8 +5,9 @@
 #ifndef CALCULUS_ASSERTIONS_H
 #define CALCULUS_ASSERTIONS_H
 
-#include "exceptions.h"
-#include "output/printable.h"
+#include <declarations.h>
+#include <exceptions.h>
+#include <output/printable.h>
 
 /** We define require as a macro to let message be lazily-evaluated */
 #ifdef ENABLE_ASSERTIONS

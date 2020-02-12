@@ -12,9 +12,9 @@
 /**
  * Module without learnable parameters
  */
-declare(function) : layer {
+struct function : layer {
 /** Update on a function has no effect, because function has no learnable parameters. */
-    void update(num) final;
+    void update(scalar) final;
 };
 
 #endif //CALCULUS_FUNCTION_H

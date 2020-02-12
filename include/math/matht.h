@@ -8,6 +8,7 @@
 #include <declarations.h>
 #include <math/tensor.h>
 #include <assertions.h>
+#include "arrays/dim.h"
 
 #define __require_arrays_same_size(a, b) require(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
@@ -38,10 +39,10 @@ T sum(carray<T> data) {
     return res;
 }
 template<typename T>
-array<T> operator-(carray<T> arr, T scalar) {
+arr<T> operator-(carray<T> arr, T scalar) {
     val size{arr.size()};
 
-    array<T> result;
+    arr<T> result;
     result.resize(size);
 
     for (var i{0u}; i < size; ++i)
@@ -84,39 +85,30 @@ T dot(carray<T> a, carray<T> b) {
  * @param b Second tensor
  * @param dim_a Dimension to sum over on a
  * @param dim_b Dimension to sum over on b
- * @return
  */
 tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b);
+/**
+ * Tensor dot product
+ * @param a First tensor
+ * @param b Second tensor
+ * @param dim_a Dimensions to sum over
+ * @param dim_b Dimensions to sum over
+ */
+tensor dot(ctensor a, ctensor b, dim cref dim_a, dim cref dim_b);
 /**
  * Tensor (outer) product for vecotrs and tensors
  * @param a
  * @param b
  * @return
  */
-tensor outer(ctensor a, ctensor b);
+[[nodiscard]] tensor outer(ctensor a, ctensor b);
 
 /* Functions on tensors */
-/** Sum of elements of a tensor */
-num sum(ctensor t);
+/** Sums all elements of a tensor */
+[[nodiscard]] scalar sum(ctensor t);
+/** Sums tensors along dimensions */
+[[nodiscard]] tensor sum(ctensor t, nat dimension);
 /** Average of all elements of a tensor */
-num mean(ctensor t);
-
-/* Random vectors */
-/**
- * Creates a vector with random numbers, uniformly distributed
- * @param size Vector size
- * @param min Distribution minimum
- * @param max Distribution maximum
- * @return Vector with random numbers
- */
-vec vec_uniform(nat size, num min = 0, num max = 1);
-/**
- * Creates a vector with random numbers, normally distributed
- * @param size Vector size
- * @param min Distribution mean
- * @param max Distribution standard deviation
- * @return Vector with random numbers
- */
-vec vec_normal(nat size, num mean = .5, num std = .5);
+[[nodiscard]] scalar mean(ctensor t);
 
 #endif //CALCULUS_MATHT_H

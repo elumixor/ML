@@ -2,31 +2,29 @@
 // Created by vlado on 2/2/20.
 //
 
-#ifndef CALCULUS_OUTPUT_H
-#define CALCULUS_OUTPUT_H
+#ifndef CALCULUS_PRINTABLE_H
+#define CALCULUS_PRINTABLE_H
 
 #include <declarations.h>
-#include <output/to_string.h>
 
-declare(printable) {
+struct printable {
     string str;
 
     printable() = default;
     template<typename T>
-    printable(const T &arg): str{to_string(arg)} {}
+    printable(T cref arg): str{to_string(arg)} {}
     printable(string str);
-    printable(const char &c);
+    printable(char cref c);
     printable(const char *arg);
     void __print() const;
     operator string() const;
-    printable &operator=(cstring x);
+    printable ref operator=(string cref x);
 
     static printable empty;
     static printable new_line;
 };
 
-printable operator+(const printable &a, const printable &b);
-
+printable operator+(printable cref a, printable cref b);
 printable operator "" _pr(const char *str, size_t);
 
 /**
@@ -44,4 +42,4 @@ printable operator "" _pr(const char *str, size_t);
 #define print(arg) (printable::empty + arg).__print()
 #define print_line() printable::empty.__print()
 
-#endif //CALCULUS_OUTPUT_H
+#endif //CALCULUS_PRINTABLE_H

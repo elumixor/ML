@@ -1,95 +1,53 @@
 //
 // Created by vlado on 2/2/20.
 //
+//
+//#include <nn/network.h>
+//#include <output/printable.h>
+//#include <math/matht.h>
+//#include <iostream>
+//#include <vec.h>
+//#include <variant>
+//#include <output/to_string.h>
+#include <declarations.h>
+#include <arrays/arr.h>
+#include <output/to_string.h>
+//#include <math/dim.h>
+//#include <math/vec.h>
 
-#include <nn/network.h>
-#include <output/printable.h>
-#include <math/matht.h>
-#include <iterable.h>
+//void p(dim cref d) {
+//    printf("f");
+//}
+template<typename T>
 
-//declare(fc1) : layer {
-//    layer_name("fc1");
-//    layer *copy() const override { return new fc1(*this); }
-//    tensor operator()(const tensor &input) override {
-//        return tensor();
-//    }
-//    tensor diff(const tensor &dl) override {
-//        return tensor();
-//    }
-//    void update(num learning_rate) override {
-//
-//    }
-//};
-//
-//declare(fc2) : layer {
-//    layer_name("fc2");
-//    layer *copy() const override { return new fc2(*this); }
-//    tensor operator()(const tensor &input) override {
-//        return tensor();
-//    }
-//    tensor diff(const tensor &dl) override {
-//        return tensor();
-//    }
-//    void update(num learning_rate) override {
-//
-//    }
-//};
+void p1(arr<T> cref d) {
+    printf("f?");
+}
 
 int main() {
-    tensor W{{1, 2},
-             {3, 4}};
+    dim a{1, 2, 3};
 
-    tensor x{{1, 2},
-             {1, 3},
-             {1, 4}};
+    print(a);
+    for (var elem: a)
+        print(elem);
 
-    tensor Y{{{1, 1}, {2, 2}},
-             {{1, 0}, {3, 5}},
-             {{1, 0}, {4, 5}}};
+    //    tensor Y{{1, 1, 1},
+//             {1, 0, 0},
+//             {1, 0, 1}};
+//
+//    tensor W{{1, 2, 0},
+//             {3, 4, 0}};
+//
+//    tensor Y1{{{1, 1, 1}, {2, 2, 1}},
+//              {{1, 0, 0}, {3, 5, 0}},
+//              {{1, 0, 1}, {4, 5, 1}}};
+//
+//    tensor W1{{{1, 2, 0}, {0, 1, 3}},
+//              {{3, 4, 0}, {1, 0, 3}}};
 
-
-    print(x.dimensions);
-    print(x.vector(0, {0}));
-    print(x.vector(0, {1}));
-
-    print(x.vector(1, {0}));
-    print(x.vector(1, {1}));
-    print(x.vector(1, {2}));
-
-    print_line();
-
-    print(W.vector(0, {0}));
-    print(W.vector(0, {1}));
-    print(W.vector(1, {0}));
-    print(W.vector(1, {1}));
-
-    print_line();
-    print(Y);
-    print_line();
-
-    print(Y.vector(0, {0, 0}));
-    print(Y.vector(1, {0, 0}));
-    print(Y.vector(2, {0, 0}));
-
-    print_line();
-    print(Y.vector(0, {1, 0}));
-    print(Y.vector(1, {1, 0}));
-    print(Y.vector(2, {1, 0}));
-    print_line();
-    print(Y.vector(0, {0, 1}));
-    print(Y.vector(1, {0, 1}));
-    print(Y.vector(2, {0, 1}));
-    print_line();
-    print(Y.vector(0, {1, 1}));
-    print(Y.vector(1, {1, 1}));
-    print(Y.vector(2, {1, 1}));
-//    print(dot(W, x, 0, 0));
-
-
-//    >>> a = np.arange(60.).reshape(3,4,5)
-//    >>> b = np.arange(24.).reshape(4,3,2)
-//    >>> c = np.tensordot(a,b, axes=([1,0],[0,1]))
-//    >>> c.shape
-
-//    print(dot(tensor({3, 4, 5}, 60), tensor({4, 3, 2}, 24), {1, 0}, {0, 1})));
+    // matrix multiplication on batch of multi-dimensional input
+//    print(dot(Y, W, 1, 1));
+//    print(dot(Y1, W1, 1, 0));
+//    print(dot(Y1, W, 1, 0));
+//    print(dot({{1,2}, {3,4}}, {{2,3}, {2,1}}, 1, 0));
 }
