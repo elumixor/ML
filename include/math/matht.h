@@ -8,7 +8,7 @@
 #include <declarations.h>
 #include <math/tensor.h>
 #include <assertions.h>
-#include "arrays/dim.h"
+#include "arrays/arrays.h"
 
 #define __require_arrays_same_size(a, b) require(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
@@ -19,7 +19,7 @@
  * @return Product of all elements.
  */
 template<typename T>
-T product(carray<T> data) {
+T product(farray<T> data) {
     T res{1};
     for (const auto &d : data)
         res *= d;
@@ -32,17 +32,17 @@ T product(carray<T> data) {
  * @return Sum of all elements.
  */
 template<typename T>
-T sum(carray<T> data) {
+T sum(farray<T> data) {
     T res{0};
     for (const auto &d : data)
         res += d;
     return res;
 }
 template<typename T>
-arr<T> operator-(carray<T> arr, T scalar) {
+farray<T> operator-(farray<T> arr, T scalar) {
     val size{arr.size()};
 
-    arr<T> result;
+    farray<T> result;
     result.resize(size);
 
     for (var i{0u}; i < size; ++i)
@@ -58,7 +58,7 @@ arr<T> operator-(carray<T> arr, T scalar) {
  * @return Number, dot product of a * b.
  */
 template<typename T>
-T operator*(carray<T> a, carray<T> b) {
+T operator*(farray<T> a, farray<T> b) {
     __require_arrays_same_size(a, b);
 
     auto size = a.size();
@@ -76,7 +76,7 @@ T operator*(carray<T> a, carray<T> b) {
  * @return Number, dot product of a * b.
  */
 template<typename T>
-T dot(carray<T> a, carray<T> b) {
+T dot(farray<T> a, farray<T> b) {
     return a * b;
 }
 /**
@@ -86,7 +86,7 @@ T dot(carray<T> a, carray<T> b) {
  * @param dim_a Dimension to sum over on a
  * @param dim_b Dimension to sum over on b
  */
-tensor dot(ctensor a, ctensor b, natural dim_a, natural dim_b);
+tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b);
 /**
  * Tensor dot product
  * @param a First tensor
@@ -107,7 +107,7 @@ tensor dot(ctensor a, ctensor b, dim cref dim_a, dim cref dim_b);
 /** Sums all elements of a tensor */
 [[nodiscard]] scalar sum(ctensor t);
 /** Sums tensors along dimensions */
-[[nodiscard]] tensor sum(ctensor t, natural dimension);
+[[nodiscard]] tensor sum(ctensor t, nat dimension);
 /** Average of all elements of a tensor */
 [[nodiscard]] scalar mean(ctensor t);
 

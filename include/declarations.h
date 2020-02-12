@@ -36,7 +36,7 @@
 /** Numeric type. (defaults to float) */
 using scalar = float;
 /** Natural number, used for indexing */
-using natural = size_t;
+using nat = size_t;
 /** Alias for std::string */
 using string = std::string;
 /** Alias for std::array<T> @tparam T data type */

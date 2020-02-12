@@ -2,43 +2,28 @@
 // Created by vlado on 2/2/20.
 //
 //
-//#include <nn/network.h>
-//#include <output/printable.h>
-//#include <math/matht.h>
-//#include <iostream>
-//#include <vec.h>
-//#include <variant>
-//#include <output/to_string.h>
 #include <declarations.h>
-#include <arrays/farray.h>
+#include <arrays/arrays.h>
 #include <output/to_string.h>
-#include <arrays/indices.h>
-//#include <math/dim.h>
-//#include <math/vec.h>
-
-//void p(dim cref d) {
-//    printf("f");
-//}
-template<typename T>
-
-void p1(farray<T> cref d) {
-    printf("f?");
-}
+#include <arrays/iterators.h>
+#include <math/tensor.h>
+#include "output/printable.h"
 
 int main() {
+//    print( (dim{1,2,3}) - (dim{2,3,4}));
+
+    tensor Y{{
+                     {1, 1, 1},
+                     {1, 0, 0}
+             },
+             {       {1, 0, 0},
+                     {1, 0, 1}
+             }};
+
+
     dim a{1, 2, 3};
+    dim b{a};
 
-    print(a);
-    for (var elem: a)
-        print(elem);
-
-    for (cval ind : indices(a))
-        print(ind);
-
-    //    tensor Y{{1, 1, 1},
-//             {1, 0, 0},
-//             {1, 0, 1}};
-//
 //    tensor W{{1, 2, 0},
 //             {3, 4, 0}};
 //

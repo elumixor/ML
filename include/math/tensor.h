@@ -1,37 +1,48 @@
-////
-//// Created by vlado on 2/2/20.
-////
 //
+// Created by vlado on 2/2/20.
+//
+
 #ifndef CALCULUS_TENSOR_H
 #define CALCULUS_TENSOR_H
-//
-#include <declarations.h>
-//
-///**
-// * Tensor class for ML
-// */
+
+#include "declarations.h"
+#include "arrays/iterators.h"
+
+/**
+ * Tensor class for ML
+ */
 struct tensor {
-//    /* Fields */
-//
-//    scalar *elements;
-//    nat *dimensions;
-//    nat rank;
-//
-//    /* Properties */
-//    [[nodiscard]] inline bool is_scalar() { return rank == 0; };
-//
-//    /* Constructors */
-//    tensor();
-//    tensor(tensor cref);
-//    tensor(tensor mref) noexcept;
-//
-//    tensor(params<scalar> elements, params<nat> dims = {1});
-//    tensor(params<tensor> tensors);
-//
-////    static of(scalar value, params)
-//
-//    /* Destructor */
-//
+    /* Fields */
+    /** Elements of the tensor. */
+    vec elements;
+    /** Dimensions of the tensor. */
+    dim dimensions;
+
+    /* Methods */
+    /** Accesses element at indices at dimensions. */
+    [[nodiscard]] scalar ref operator[](dim cref) const;
+    /** Accesses element at index at flattened array. */
+    [[nodiscard]] inline scalar ref operator[](nat i) const { return elements[i]; }
+
+    /* Constructors */
+    /** Creates zero tensor. */
+    inline tensor() = default;
+    /** Copies elements of another tensor. */
+    inline tensor(tensor cref other) = default;
+    /** Moves elements of another tensor. */
+    inline tensor(tensor mref other) noexcept : move_init(elements, other), move_init(dimensions, other) {}
+
+    /** Creates 1D tensor (vector) with numbers. */
+    explicit tensor(vec elements);
+    /** Creates a tensor with elements and specific dimensions. */
+    tensor(vec elements, dim dimensions);
+    /** Creates a tensor by flattening inner tensors. */
+    tensor(params<tensor> tensors);
+    /** Creates a tensor by flattening inner vectors. */
+    tensor(params<vec> vectors);
+
+    /** Creates a tensor with specified dimensions, filled with the same value */
+    static tensor of(scalar value, dim cref dimensions);
 };
 
 using ctensor = tensor cref;

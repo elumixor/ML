@@ -16,8 +16,8 @@ struct ml_exception : virtual public std::exception {
     string msg;
 
     ml_exception(string cref file, int line, string cref msg = "ML Exception.") : msg{msg + "\n\t" + file + ": " + to_string(line)} {}
-    ~ml_exception() noexcept override;
-    [[nodiscard]] const char *what() const noexcept override;
+    inline ~ml_exception() noexcept override = default;
+    [[nodiscard]] const inline char *what() const noexcept override { return msg.c_str(); }
 };
 
 /** When assertion fails */

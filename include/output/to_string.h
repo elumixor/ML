@@ -6,7 +6,7 @@
 #define MACHINE_LEARNING_TO_STRING_H
 
 #include <declarations.h>
-#include <arrays/farray.h>
+#include <arrays/arrays.h>
 
 /** String representation of a fixed generic array. */
 template<typename T>

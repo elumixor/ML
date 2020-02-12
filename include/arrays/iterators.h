@@ -1,82 +1,91 @@
-////
-//// Created by vlado on 3/2/20.
-////
 //
-//#ifndef CALCULUS_ITERABLE_H
-//#define CALCULUS_ITERABLE_H
+// Created by Vladyslav Yazykov on 12/02/2020.
 //
-//#include "declarations.h"
-//#include "conversions.h"
-//#include "assertions.h"
-//#include <dim.h>
-//
-///* Reverse iterable */
-//template<typename T>
-//struct reversion_wrapper {
-//    T &iterable;
-//};
-//template<typename T>
-//auto begin(reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
-//template<typename T>
-//auto end(reversion_wrapper<T> w) { return std::rend(w.iterable); }
-///** Reversed iterator */
-//template<typename T>
-//reversion_wrapper<T> reverse(T &&iterable) { return {iterable}; }
-//
-///**
-// * Compares two arrays element-wise.
-// * @tparam T Elements type.
-// * @param a First array.
-// * @param b Second array.
-// * @return True, if elements at same indices are equal.
-// */
-////template<typename T>
-////bool operator==(carray<T> a, carray<T> b) {
-////    auto size = a.size;
-////    if (b.size != size) return false;
-////
-////    for (nat i = 0; i < size; ++i) if (a[i] != b[i]) return false;
-////
-////    return true;
-////}
-///**
-// * Compares two arrays element-wise.
-// * @tparam T Elements type.
-// * @param a First array.
-// * @param b Second array.
-// * @return True, arrays have different length or have different elements at same indices
-// */
-////template<typename T>
-////bool operator!=(carray<T> a, carray<T> b) { return !(a == b); }
-///**
-// * Creates an array with a range of numbers.
-// * @tparam T Array data type.
-// * @param count Total number of elements.
-// * @param start Starting element.
-// * @param step Difference between two elements.
-// * @return Created array with a range of numbers.
-// */
-//template<typename T>
-//array<T> range(nat count, T start = 0, T step = 1) {
-//    array<T> result(count);
-//    for (var i{0u}; i < count; ++i)
-//        result[i] = start + step * i;
-//
-//    return result;
-//}
-///**
-// * Creates a range of indices for array.
-// */
-//template<typename T>
-//vnat indices(array<T> arr) { return range(arr.size); }
-///** Returns true if source array contains specific element. */
-//template<typename T>
-//bool contains(carray<T> source, T element) {
-//    for (cval item : source)
-//        if (item == element) return true;
-//
-//    return false;
-//}
+
+#ifndef MACHINE_LEARNING_ITERATORS_H
+#define MACHINE_LEARNING_ITERATORS_H
+
+#include <arrays/arrays.h>
+
+/* Indices iterable. Takes a dim (array of nat numbers) */
+struct indices {
+    dim dimensions;
+
+    explicit inline indices(dim dimensions) : move_init_s(dimensions) {}
+
+    /* Iterator  */
+    struct iterator {
+        dim cref maximum;
+        dim current;
+
+        explicit iterator(dim cref maximum);
+        iterator(dim cref maximum, dim current);
+
+        dim cref operator*() const;
+        const iterator &operator++();
+        bool operator!=(iterator cref) const;
+    };
+
+    [[nodiscard]] iterator begin() const;
+    [[nodiscard]] iterator end() const;
+};
+
+template<typename T>
+struct reverse {
+    farray<T> cref array;
+
+    inline explicit reverse(farray<T> cref array) : copy_init_s(array) {}
+
+    /* Iterator  */
+    struct iterator {
+        T *data;
+
+        explicit iterator(T *data) : copy_init_s(data) {}
+
+        T ref operator*() const { return *data; }
+        const iterator &operator++() {
+            data--;
+            return *this;
+        }
+        bool operator!=(iterator cref other) const {
+            return data != other.data;
+        }
+    };
+
+    [[nodiscard]] iterator begin() const { return iterator(array.elements + array.size - 1); }
+    [[nodiscard]] iterator end() const { return iterator(array.elements - 1); }
+};
+
+
+template<typename T>
+struct select {
+    farray<T> cref array;
+    const nat step;
+    const nat offset;
+
+    inline select(farray<T> cref array, nat step, nat offset = 0) : copy_init_s(array), copy_init_s(step), copy_init_s(offset) {}
+
+    /* Iterator  */
+    struct iterator {
+        T *data;
+        nat step{0};
+
+        explicit iterator(T *data, nat step) : copy_init_s(data), copy_init_s(step) {}
+        explicit iterator(T *data) : copy_init_s(data) {}
+
+        T ref operator*() const { return *data; }
+        const iterator &operator++() {
+            data += step;
+            return *this;
+        }
+        bool operator!=(iterator cref other) const { return data < other.data; }
+    };
+
+    [[nodiscard]] iterator begin() const { return iterator(array.elements + offset, step); }
+    [[nodiscard]] iterator end() const { return iterator(array.elements + array.size); }
+};
+
+
 //template<typename T>
 //std::tuple<array<T>, array<T>> split(carray<T> arr, nat split_index) {
 //    val s2{arr.size - split_index};
@@ -93,45 +102,6 @@
 //        a2.push_back(arr[split_index + i]);
 //
 //    return {a1, a2};
-//}
-///**
-// * Selects elements from array, iterating in fixed step size, starting at offset.
-// * @tparam T Array data type.
-// * @param source Source array.
-// * @param step Step size.
-// * @param offset Starting index.
-// * @return New array with elements at selected indices.
-// */
-//template<typename T>
-//array<T> select(carray<T> source, nat step = 1, nat offset = 0) {
-//    val size = source.size;
-//
-//    array<T> dest(size / step);
-//
-//    var j{0};
-//    for (var i = offset; i < size; i += step)
-//        dest[j++] = source[i];
-//
-//    return dest;
-//}
-///**
-// * Selects elements from array at specified indices.
-// * @tparam T Array data type.
-// * @param source Source array.
-// * @param ind Indices array.
-// * @return New array with elements at selected indices.
-// */
-//template<typename T>
-//array<T> select(carray<T> source, dim cref ind) {
-//    val size = ind.size;
-//    check(source.size >= size, "Source size was smaller then selected indices size. " + source.size + " < " + size + ".")
-//
-//    array<T> dest(size);
-//
-//    for (var i{0u}; i < size; ++i)
-//        dest[i] = source[ind[i]];
-//
-//    return dest;
 //}
 ///**
 // * Selects elements from array except elements at specified indices.
@@ -242,5 +212,5 @@
 //
 //    return result;
 //}
-//
-//#endif //CALCULUS_ITERABLE_H
+
+#endif //MACHINE_LEARNING_ITERATORS_H

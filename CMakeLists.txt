@@ -18,14 +18,13 @@ add_executable(machine_learning
         include/declarations.h
 
         include/assertions.h
-        include/exceptions.h src/exceptions.cpp
+        include/exceptions.h
         include/conversions.h
 
-        include/iterable.h
-        include/arrays/indices.h src/array/indices.cpp
+        src/array/indices.cpp
 
         include/output/printable.h src/output/printable.cpp
-        src/output/to_string.cpp
+        include/output/to_string.h src/output/to_string.cpp
 
         include/math/tensor.h src/math/tensor.cpp
         include/math/matht.h src/math/matht.cpp
@@ -36,5 +35,5 @@ add_executable(machine_learning
         include/nn/function.h src/nn/function.cpp
         include/nn/layers/fc.h src/nn/layers/fc.cpp
 
-        include/arrays/farray.h
-        include/output/to_string.h)
+        include/arrays/arrays.h
+        include/arrays/iterators.h)

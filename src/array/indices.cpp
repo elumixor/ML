@@ -2,7 +2,7 @@
 // Created by Vladyslav Yazykov on 06/02/2020.
 //
 
-#include <arrays/indices.h>
+#include <arrays/iterators.h>
 
 // Constructor
 indices::iterator::iterator(dim cref maximum) : copy_init_s(maximum), current{dim::of(maximum.size, 0)} {}
