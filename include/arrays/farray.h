@@ -2,15 +2,15 @@
 // Created by Vladyslav Yazykov on 11/02/2020.
 //
 
-#ifndef MACHINE_LEARNING_ARR_H
-#define MACHINE_LEARNING_ARR_H
+#ifndef MACHINE_LEARNING_FARRAY_H
+#define MACHINE_LEARNING_FARRAY_H
 
 #include "declarations.h"
 #include "assertions.h"
 
 /** Generic array of a fixed size. */
 template<typename T>
-struct arr {
+struct farray {
     /** Iterator structure */
     struct arr_iterator {
         T *data;
@@ -25,43 +25,43 @@ struct arr {
 
     /* Fields */
     /** Size of the array. */
-    nat size{0};
+    natural size{0};
     /** Elements of the array. */
     T *elements{nullptr};
 
     /* Properties */
     /** Accesses element at index. */
-    inline T &operator[](nat index) const {
+    T &operator[](natural index) const {
         require(index < size, "Index (" + index + ") was out of bounds for array with size " + size);
         return elements[index];
     }
     /** Checks if array has any elements. */
-    [[nodiscard]] inline bool empty() { return size == 0; }
+    [[nodiscard]] bool empty() const { return size == 0; }
 
     /* Constructors (defaults) */
     /** Creates an empty array of zero size. */
-    arr() = default;
+    farray() = default;
     /** Copies (deeply) elements of an existing array into a new one. */
-    arr(arr cref other) : copy_init(size, other), elements{new T[size]} {
+    farray(farray cref other) : copy_init(size, other), elements{new T[size]} {
         for (auto i{0u}; i < size; ++i) elements[i] = other[i];
     }
     /** Moves elements of an existing array into a new one. */
-    arr(arr mref other) noexcept : copy_init(size, other), copy_init(elements, other) {
+    farray(farray mref other) noexcept : copy_init(size, other), copy_init(elements, other) {
         other.elements = nullptr;
         other.size = 0;
     }
 
     /* Constructors (from elements) */
     /** Creates an array from elements at location. */
-    arr(T *elements, nat size) : copy_init_s(size), elements(new T[size]) {
+    farray(T *elements, natural size) : copy_init_s(size), elements(new T[size]) {
         for (auto i{0u}; i < size; ++i) this->elements[i] = elements[i];
     }
     /** Creates an array from start address to end address. */
-    arr(T *start, T *end) : size{end - start}, elements{new T[size]} {
+    farray(T *start, T *end) : size{end - start}, elements{new T[size]} {
         for (auto i{0u}; i < size; ++i) elements[i] = start[i];
     }
     /** Creates and array from an initializer list of elements. */
-    arr(params<T> elements) : size{elements.size()}, elements{new T[size]} {
+    farray(params<T> elements) : size{elements.size()}, elements{new T[size]} {
         val begin{elements.begin()};
         var i{0u};
         for (cval element : elements)
@@ -70,8 +70,8 @@ struct arr {
 
     /* Static constructors */
     /** Creates an array of a copy of the same element. */
-    static arr of(nat size, T element) {
-        arr result;
+    static farray of(natural size, T element) {
+        farray result;
         result.size = size;
         result.elements = new T[size];
         for (auto i{0u}; i < size; ++i) result.elements[i] = element;
@@ -80,7 +80,7 @@ struct arr {
 
     /* Assignment operators */
     /** Copies (deeply) elements of an existing array into a new one. */
-    arr &operator=(arr cref other) {
+    farray &operator=(farray cref other) {
         if (this == &other)return *this;
         delete[](elements);
 
@@ -90,7 +90,7 @@ struct arr {
         for (auto i{0u}; i < size; ++i) elements[i] = other.elements[i];
     }
     /** Moves elements of an existing array into a new one. */
-    arr &operator=(arr mref other) noexcept {
+    farray &operator=(farray mref other) noexcept {
         if (this == &other)return *this;
         delete[](elements);
 
@@ -102,14 +102,24 @@ struct arr {
     }
 
     /* Destructor */
-    inline virtual ~arr() { delete[] elements; }
+    virtual ~farray() { delete[] elements; }
 
     /* Iteration */
     arr_iterator begin() { return arr_iterator(elements); }
     arr_iterator end() { return arr_iterator(elements + size); }
+
+    /* Operators */
+    bool operator==(farray cref other) const {
+        forsize if (elements[i] != other.elements[i])
+                return false;
+
+        return true;
+    }
+    bool operator!=(farray cref other) const { return !(*this == other); }
 };
 
-using dim = arr<nat>;
-using vec = arr<scalar>;
+using dim = farray<natural>;
+using vec = farray<scalar>;
 
-#endif //MACHINE_LEARNING_ARR_H
+
+#endif //MACHINE_LEARNING_FARRAY_H

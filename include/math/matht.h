@@ -86,7 +86,7 @@ T dot(carray<T> a, carray<T> b) {
  * @param dim_a Dimension to sum over on a
  * @param dim_b Dimension to sum over on b
  */
-tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b);
+tensor dot(ctensor a, ctensor b, natural dim_a, natural dim_b);
 /**
  * Tensor dot product
  * @param a First tensor
@@ -107,7 +107,7 @@ tensor dot(ctensor a, ctensor b, dim cref dim_a, dim cref dim_b);
 /** Sums all elements of a tensor */
 [[nodiscard]] scalar sum(ctensor t);
 /** Sums tensors along dimensions */
-[[nodiscard]] tensor sum(ctensor t, nat dimension);
+[[nodiscard]] tensor sum(ctensor t, natural dimension);
 /** Average of all elements of a tensor */
 [[nodiscard]] scalar mean(ctensor t);
 

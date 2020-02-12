@@ -34,11 +34,11 @@
 
 /* Type aliases */
 /** Numeric type. (defaults to float) */
-using scalar=float;
+using scalar = float;
 /** Natural number, used for indexing */
-using nat=size_t;
+using natural = size_t;
 /** Alias for std::string */
-using string=std::string;
+using string = std::string;
 /** Alias for std::array<T> @tparam T data type */
 /** Alias for initializer lise */
 template<typename T> using params = std::initializer_list<T>;

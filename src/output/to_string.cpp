@@ -50,7 +50,7 @@
 //
 //    return str;
 //}
-////string to_string(__indices_iterable cref itr) {
+////string to_string(indices cref itr) {
 ////    array<vnat> result;
 ////
 ////    val size{product(itr.dimensions)};

@@ -6,11 +6,11 @@
 #define MACHINE_LEARNING_TO_STRING_H
 
 #include <declarations.h>
-#include <arrays/arr.h>
+#include <arrays/farray.h>
 
 /** String representation of a fixed generic array. */
 template<typename T>
-string to_string(arr<T> cref a, char opening_bracket = '[', char closing_bracket = ']', string cref separator = ", ") {
+string to_string(farray<T> cref a, char opening_bracket = '[', char closing_bracket = ']', string cref separator = ", ") {
     string result{opening_bracket};
 
     val size{a.size};

@@ -22,7 +22,7 @@ add_executable(machine_learning
         include/conversions.h
 
         include/iterable.h
-        include/index_iterable.h src/index_iterable.cpp
+        include/arrays/indices.h src/array/indices.cpp
 
         include/output/printable.h src/output/printable.cpp
         src/output/to_string.cpp
@@ -36,5 +36,5 @@ add_executable(machine_learning
         include/nn/function.h src/nn/function.cpp
         include/nn/layers/fc.h src/nn/layers/fc.cpp
 
-        include/arrays/arr.h
+        include/arrays/farray.h
         include/output/to_string.h)

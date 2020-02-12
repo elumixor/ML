@@ -10,8 +10,9 @@
 //#include <variant>
 //#include <output/to_string.h>
 #include <declarations.h>
-#include <arrays/arr.h>
+#include <arrays/farray.h>
 #include <output/to_string.h>
+#include <arrays/indices.h>
 //#include <math/dim.h>
 //#include <math/vec.h>
 
@@ -20,7 +21,7 @@
 //}
 template<typename T>
 
-void p1(arr<T> cref d) {
+void p1(farray<T> cref d) {
     printf("f?");
 }
 
@@ -30,6 +31,9 @@ int main() {
     print(a);
     for (var elem: a)
         print(elem);
+
+    for (cval ind : indices(a))
+        print(ind);
 
     //    tensor Y{{1, 1, 1},
 //             {1, 0, 0},
