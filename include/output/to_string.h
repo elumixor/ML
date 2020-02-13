@@ -23,6 +23,7 @@ string to_string(farray<T> cref a, char opening_bracket = '[', char closing_brac
     result += closing_bracket;
     return result;
 }
+//string to_string
 /** String representation of a generic pointer. */
 template<typename T>
 string to_string(const T *data) {

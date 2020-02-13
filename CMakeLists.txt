@@ -36,4 +36,4 @@ add_executable(machine_learning
         include/nn/layers/fc.h src/nn/layers/fc.cpp
 
         include/arrays/arrays.h
-        include/arrays/iterators.h)
+        include/arrays/iterators.h include/math/tensor_view.h src/math/tensor_view.cpp)

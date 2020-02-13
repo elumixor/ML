@@ -53,8 +53,8 @@ farray<T> operator-(farray<T> arr, T scalar) {
 /**
  * Dot product for two vectors. Same as dot(a,b)
  * @tparam T Numeric type.
- * @param a First vector.
- * @param b Second vector.
+ * @param a First vector_view.
+ * @param b Second vector_view.
  * @return Number, dot product of a * b.
  */
 template<typename T>
@@ -71,8 +71,8 @@ T operator*(farray<T> a, farray<T> b) {
 /**
  * Dot product for two vectors. Same as a * b
  * @tparam T Numeric type.
- * @param a First vector.
- * @param b Second vector.
+ * @param a First vector_view.
+ * @param b Second vector_view.
  * @return Number, dot product of a * b.
  */
 template<typename T>
@@ -86,7 +86,7 @@ T dot(farray<T> a, farray<T> b) {
  * @param dim_a Dimension to sum over on a
  * @param dim_b Dimension to sum over on b
  */
-tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b);
+tensor dot(tensor cref a, tensor cref b, nat dim_a, nat dim_b);
 /**
  * Tensor dot product
  * @param a First tensor
@@ -94,21 +94,21 @@ tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b);
  * @param dim_a Dimensions to sum over
  * @param dim_b Dimensions to sum over
  */
-tensor dot(ctensor a, ctensor b, dim cref dim_a, dim cref dim_b);
+tensor dot(tensor cref a, tensor cref b, dim cref dim_a, dim cref dim_b);
 /**
  * Tensor (outer) product for vecotrs and tensors
  * @param a
  * @param b
  * @return
  */
-[[nodiscard]] tensor outer(ctensor a, ctensor b);
+[[nodiscard]] tensor outer(tensor cref a, tensor cref b);
 
 /* Functions on tensors */
 /** Sums all elements of a tensor */
-[[nodiscard]] scalar sum(ctensor t);
+[[nodiscard]] scalar sum(tensor cref t);
 /** Sums tensors along dimensions */
-[[nodiscard]] tensor sum(ctensor t, nat dimension);
+[[nodiscard]] tensor sum(tensor cref t, nat dimension);
 /** Average of all elements of a tensor */
-[[nodiscard]] scalar mean(ctensor t);
+[[nodiscard]] scalar mean(tensor cref t);
 
 #endif //CALCULUS_MATHT_H

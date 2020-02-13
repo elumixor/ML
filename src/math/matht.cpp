@@ -7,10 +7,10 @@
 //#include <iterable.h>
 //#include <exceptions.h>
 //
-//scalar sum(ctensor t) { return sum(t.elements); }
-//tensor sum(ctensor t, nat dim) { nimpl }
-//scalar mean(ctensor t) { return sum(t) / t.size(); }
-//tensor outer(ctensor a, ctensor b) {
+//scalar sum(tensor cref t) { return sum(t.elements); }
+//tensor sum(tensor cref t, nat dim) { nimpl }
+//scalar mean(tensor cref t) { return sum(t) / t.size(); }
+//tensor outer(tensor cref a, tensor cref b) {
 //    var asz = a.size();
 //    var bsz = b.size();
 //
@@ -23,7 +23,7 @@
 //
 //    return tensor(concat(a.dimensions, b.dimensions), elements);
 //}
-//tensor dot(ctensor a, ctensor b, nat dim_a, nat dim_b) {
+//tensor dot(tensor cref a, tensor cref b, nat dim_a, nat dim_b) {
 //    check(dim_a < a.rank, "Dimension index for first tensor exceeds its rank. " + dim_a + " >= " + a.rank + ".");
 //    check(dim_b < b.rank, "Dimension index for second tensor exceeds its rank. " + dim_b + " >= " + b.rank + ".");
 //
@@ -48,7 +48,7 @@
 //
 //    return result;
 //}
-//tensor dot(ctensor a, ctensor b, cvnat dim_a, cvnat dim_b) {
+//tensor dot(tensor cref a, tensor cref b, cvnat dim_a, cvnat dim_b) {
 //    // dim_a is an array of dimensions indices, where we treat a tensor as covectors
 //    // dim_b is an array of dimensions indices where we treat b tensor as vectors
 //

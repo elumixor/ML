@@ -23,8 +23,8 @@
 //
 //    /* Implementing layer */
 ////    [[nodiscard]] inline layer *copy() const override { return new fc(*this); }
-//    tensor operator()(ctensor input) override;
-//    tensor diff(ctensor dl) ;
+//    tensor operator()(tensor cref input) override;
+//    tensor diff(tensor cref dl) ;
 //    void update(scalar learning_rate) ;
 //};
 //

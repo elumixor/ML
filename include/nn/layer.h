@@ -34,13 +34,13 @@ struct layer {
      * @param input Input tensor.
      * @return Transformed tensor.
      */
-    virtual tensor operator()(ctensor input) = 0;
+    virtual tensor operator()(tensor cref input) = 0;
     /**
      * Computes function derivative of a tensor object
      * @param dl Upstream loss derivative
      * @return
      */
-    virtual tensor diff(ctensor dl) = 0;
+    virtual tensor diff(tensor cref dl) = 0;
     /**
      * Updates module's learnable parameters by computed gradient, multiplied by learning rate.
      * @example W = W - gradient * learning_rate;

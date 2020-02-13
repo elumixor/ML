@@ -12,9 +12,9 @@
 //fc::fc(fc &&other) noexcept : move_init(weights, other), move_init(bias, other) {}
 //
 //
-//tensor fc::operator()(ctensor input) {
-//    // Assuming input is a 1D tensor (vector), extended to batch size
-//    // We get (covariant: batch, contravariant: vector)
+//tensor fc::operator()(tensor cref input) {
+//    // Assuming input is a 1D tensor (vector_view), extended to batch size
+//    // We get (covariant: batch, contravariant: vector_view)
 //
 //    // Basic case is when weights is a 2D tensor (matrix), extended into third dimension (batch size)
 //    // Thus we get rank 3 tensor

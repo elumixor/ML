@@ -6,20 +6,6 @@
 #include <math/matht.h>
 
 /* Helper functions */
-/** Transforms composite index in multiple dimensions to a single index in one dimension for elements array */
-nat get_single_index(dim cref index, dim cref dimensions) {
-    nat s{0};
-    nat dim_size{1};
-    nat i{dimensions.size};
-    do {
-        i--;
-        s += index[i] * dim_size;
-        dim_size *= dimensions[i];
-    } while (i > 0);
-
-    return s;
-}
-
 ///* Constructors */
 //tensor::tensor(params<scalar> numbers) : rank{1}, dimensions{numbers.size()}, elements{numbers} {}
 //tensor::tensor(params<tensor> tensors) : rank{tensors.begin()->rank + 1}, dimensions(rank), elements{} {
@@ -47,7 +33,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //// Copy and move
 //tensor::tensor(const tensor &other) = default;
 //tensor::tensor(tensor &&other) noexcept : rank{other.rank}, move_init(dimensions, other), move_init(elements, other) {}
-//tensor &tensor::operator=(ctensor other) {
+//tensor &tensor::operator=(tensor cref other) {
 //    if (this == &other) return *this;
 //
 //    rank = other.rank;
@@ -93,7 +79,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return results;
 //}
-//vec tensor::vector(nat fixed_dim, cvnat indices) const {
+//vec tensor::vector_view(nat fixed_dim, cvnat indices) const {
 //    if (rank < 2) return elements;
 //
 //    var offset{0u};
@@ -175,7 +161,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //    return tensor(elements);
 //}
 //// Addition and subtractions (element-wise)
-//tensor operator+(ctensor a, ctensor b) {
+//tensor operator+(tensor cref a, tensor cref b) {
 //    check(a.dimensions == b.dimensions, "Tensors should have same dimensions. Received " + a.dimensions + " and " + b.dimensions + ".")
 //
 //    val size = a.size();
@@ -185,14 +171,14 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return tensor(a.dimensions, els);
 //}
-//tensor operator-(ctensor a, ctensor b) { return a + -1 * b; }
+//tensor operator-(tensor cref a, tensor cref b) { return a + -1 * b; }
 //// Extending scalar to a tensor
-//tensor operator+(ctensor a, scalar b) { return a + tensor(a.dimensions, b); }
-//tensor operator-(ctensor a, scalar b) {
+//tensor operator+(tensor cref a, scalar b) { return a + tensor(a.dimensions, b); }
+//tensor operator-(tensor cref a, scalar b) {
 //    return a + -b;
 //}
 //// Scalar multiplication
-//tensor operator*(ctensor a, scalar b) {
+//tensor operator*(tensor cref a, scalar b) {
 //    val size = a.size();
 //    vec els(size);
 //    for (var i{0u}; i < a.size(); ++i)
@@ -200,7 +186,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return tensor(a.dimensions, els);
 //}
-//tensor operator*(ctensor a, ctensor b) {
+//tensor operator*(tensor cref a, tensor cref b) {
 //    if (b.rank == 0) return a * to_scalar(b);
 //    else if (a.rank == 0) return to_scalar(a) * b;
 //
@@ -214,7 +200,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return tensor(a.dimensions, els);
 //}
-//tensor operator*(scalar b, ctensor a) {
+//tensor operator*(scalar b, tensor cref a) {
 //    val size = a.size();
 //    vec els(size);
 //    for (var i{0u}; i < a.size(); ++i)
@@ -222,9 +208,9 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return tensor(a.dimensions, els);
 //}
-//tensor operator/(ctensor a, scalar b) { return a * (to_scalar(1) / b); }
+//tensor operator/(tensor cref a, scalar b) { return a * (to_scalar(1) / b); }
 //// In-place operations
-//tensor &operator+=(tensor &a, ctensor b) {
+//tensor &operator+=(tensor &a, tensor cref b) {
 //    check(a.dimensions == b.dimensions, "Tensors should have same dimensions. Received " + a.dimensions + " and " + b.dimensions + ".")
 //
 //    val size = a.size();
@@ -233,7 +219,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //
 //    return a;
 //}
-//tensor &operator-=(tensor &a, ctensor b) { return a += -b; }
+//tensor &operator-=(tensor &a, tensor cref b) { return a += -b; }
 //tensor &operator*=(tensor &a, scalar b) {
 //    val size = a.size();
 //    for (var i{0u}; i < size; ++i)
@@ -242,7 +228,7 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //    return a;
 //}
 //// Hadamard in-plcace
-//tensor &operator*=(tensor &a, ctensor b) {
+//tensor &operator*=(tensor &a, tensor cref b) {
 //    if (b.rank == 0) return a *= to_scalar(b);
 //    else if (a.rank == 0) return a = to_scalar(a) * b;
 //
@@ -256,11 +242,39 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 //}
 //tensor &operator/=(tensor &a, cnum b) { return a *= (to_scalar(1) / b); }
 
-scalar ref tensor::operator[](dim cref indices) const {
-    return operator[](get_single_index(indices, dimensions));
+/** Creates an array of number elements within each dimension. */
+dim dimensions_sizes(tensor cref tensor) {
+    dim dimension_sizes;
+    val size{tensor.dimensions.size};
+
+    dimension_sizes.size = size;
+    dimension_sizes.elements = new nat[size];
+
+    var product{1u};
+    for (var i{0u}; i < size; ++i) {
+        dimension_sizes[to_int(size) - i - 1] = product;
+        product *= tensor.dimensions[to_int(size) - i - 1];
+    }
+
+    return dimension_sizes;
 }
 
-tensor::tensor(vec elements) : move_init_s(elements), dimensions{elements.size} {}
+/** Transforms composite index in multiple dimensions to a single index in one dimension for elements array */
+nat get_single_index(dim cref index, dim cref dimensions) {
+    nat s{0};
+    nat dim_size{1};
+    nat i{dimensions.size};
+    do {
+        i--;
+        s += index[i] * dim_size;
+        dim_size *= dimensions[i];
+    } while (i > 0);
+
+    return s;
+}
+
+scalar ref tensor::operator[](dim cref indices) const { return operator[](get_single_index(indices, dimensions)); }
+tensor::tensor(vec elements) : move_init_s(elements), dimensions{this->elements.size} {}
 tensor::tensor(vec elements, dim dimensions) : move_init_s(elements), move_init_s(dimensions) {}
 tensor::tensor(params<tensor> tensors) {
     // Init dimensions
@@ -268,6 +282,8 @@ tensor::tensor(params<tensor> tensors) {
     int rank{to_int(b.dimensions.size) + 1};
 
     dimensions.elements = new nat[rank];
+    dimensions.size = rank;
+
     nat elements_count{dimensions.elements[0] = tensors.size()};
 
     for (var j{1}; j < rank; ++j)
@@ -275,27 +291,20 @@ tensor::tensor(params<tensor> tensors) {
 
     // Init elements
     elements.elements = new scalar[elements_count];
+    elements.size = elements_count;
+
     var j{0u};
     for (cval tensor : tensors) {
         val size{tensor.elements.size};
         forsize elements.elements[j++] = tensor[i];
     }
 }
-tensor::tensor(params<vec> vectors) {
-    // Init dimensions
-    cval b = *vectors.begin();
-
-    dimensions.elements = new nat[2];
-    nat elements_count{dimensions.elements[0] = vectors.size()};
-    elements_count *= (dimensions.elements[1] = b.size);
-
-    // Init elements
-    elements.elements = new scalar[elements_count];
-
-    var j{0u};
-    for (cval vector : vectors) {
-        val size{vector.size};
-        forsize elements.elements[j++] = vector[i];
-    }
-}
 tensor tensor::of(scalar value, dim cref dimensions) { return tensor(vec::of(product(dimensions), value)); }
+tensor_view tensor::view() {
+    return tensor_view(elements, dimensions, dimensions_sizes(*this));
+}
+tensor_view tensor::view(dim cref dimension_indices) {
+    return tensor_view(elements,
+                       select_at(dimensions, dimension_indices),
+                       select_at(dimensions_sizes(*this), dimension_indices));
+}

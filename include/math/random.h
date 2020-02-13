@@ -13,12 +13,12 @@ scalar random_normal(scalar mean = .5, scalar std = .5);
 
 /* Random vectors */
 /**
- * Creates a vector with uniformly distributed random components.
+ * Creates a vector_view with uniformly distributed random components.
  * @param size Vector size
  */
 vec random_uniform(nat size, scalar min = 0, scalar max = 1);
 /**
- * Creates a vector with normally distributed random components numbers.
+ * Creates a vector_view with normally distributed random components numbers.
  * @param size Vector size
  * @param min Distribution mean
  * @param max Distribution standard deviation

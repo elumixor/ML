@@ -32,57 +32,28 @@ struct indices {
 
 template<typename T>
 struct reverse {
-    farray<T> cref array;
+    const T *start;
+    nat size;
 
-    inline explicit reverse(farray<T> cref array) : copy_init_s(array) {}
+    explicit reverse(farray<T> cref array) : start{array.elements}, size{array.size} {}
 
-    /* Iterator  */
-    struct iterator {
-        T *data;
-
-        explicit iterator(T *data) : copy_init_s(data) {}
-
-        T ref operator*() const { return *data; }
-        const iterator &operator++() {
-            data--;
-            return *this;
-        }
-        bool operator!=(iterator cref other) const {
-            return data != other.data;
-        }
-    };
-
-    [[nodiscard]] iterator begin() const { return iterator(array.elements + array.size - 1); }
-    [[nodiscard]] iterator end() const { return iterator(array.elements - 1); }
+    [[nodiscard]] array_view<T> begin() const { return array_view<T>(start + size - 1, -1); }
+    [[nodiscard]] array_view<T> end() const { return array_view<T>(start - 1); }
 };
 
 
 template<typename T>
 struct select {
-    farray<T> cref array;
+    const T *data;
     const nat step;
-    const nat offset;
+    const nat count;
 
-    inline select(farray<T> cref array, nat step, nat offset = 0) : copy_init_s(array), copy_init_s(step), copy_init_s(offset) {}
+    select(farray<T> cref array, nat step, nat offset = 0)
+            : data{array.elements + offset}, copy_init_s(step), count{(array.size - offset) / step} {}
+    select(const T *data, nat step, nat count) : copy_init_s(data), copy_init_s(step), copy_init_s(count) {}
 
-    /* Iterator  */
-    struct iterator {
-        T *data;
-        nat step{0};
-
-        explicit iterator(T *data, nat step) : copy_init_s(data), copy_init_s(step) {}
-        explicit iterator(T *data) : copy_init_s(data) {}
-
-        T ref operator*() const { return *data; }
-        const iterator &operator++() {
-            data += step;
-            return *this;
-        }
-        bool operator!=(iterator cref other) const { return data < other.data; }
-    };
-
-    [[nodiscard]] iterator begin() const { return iterator(array.elements + offset, step); }
-    [[nodiscard]] iterator end() const { return iterator(array.elements + array.size); }
+    [[nodiscard]] array_view<T> begin() const { return array_view<T>(data, step); }
+    [[nodiscard]] array_view<T> end() const { return array_view<T>(data + (step * count)); }
 };
 
 

@@ -9,21 +9,23 @@
 #include "conversions.h"
 #include "assertions.h"
 
+/** Iterator structure */
+template<typename T>
+struct array_view {
+    const T *data;
+    int step;
+    T cref operator*() const { return *data; }
+    array_view ref operator++() {
+        data += step;
+        return *this;
+    }
+    bool operator!=(array_view cref other) { return data != other.data; }
+    explicit array_view(const T *data, int step = 1) : copy_init_s(data), copy_init_s(step) {}
+};
+
 /** Generic array of a fixed size. */
 template<typename T>
 struct farray {
-    /** Iterator structure */
-    struct arr_iterator {
-        T *data;
-        T ref operator*() const { return *data; }
-        arr_iterator ref operator++() {
-            data++;
-            return *this;
-        }
-        bool operator!=(arr_iterator cref other) { return data != other.data; }
-        explicit arr_iterator(T *data) : copy_init_s(data) {}
-    };
-
     /* Fields */
     /** Size of the array. */
     nat size{0};
@@ -116,8 +118,8 @@ struct farray {
     virtual ~farray() { delete[] elements; }
 
     /* Iteration */
-    arr_iterator begin() { return arr_iterator(elements); }
-    arr_iterator end() { return arr_iterator(elements + size); }
+    [[nodiscard]] array_view<T> begin() const { return array_view<T>(elements); }
+    [[nodiscard]] array_view<T> end() const { return array_view<T>(elements + size); }
 
     /* Operators */
     bool operator==(farray cref other) const {
@@ -135,6 +137,16 @@ using vec = farray<scalar>;
 
 template<typename T>
 [[nodiscard]] farray<T> select_at(farray<T> cref source, idim cref indices) {
+    val size{indices.size};
+    farray<T> result;
+    result.size = size;
+    result.elements = new T[size];
+    forsize result[i] = source[indices[i]];
+    return result;
+}
+
+template<typename T>
+[[nodiscard]] farray<T> select_at(farray<T> cref source, dim cref indices) {
     val size{indices.size};
     farray<T> result;
     result.size = size;
