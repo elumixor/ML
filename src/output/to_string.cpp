@@ -4,13 +4,14 @@
 
 #include <declarations.h>
 #include <math/tensor.h>
-
+#include <output/to_string.h>
 //#include <nn/network.h>
 //#include <output/to_string.h>
 //#include <output/printable.h>
 //#include <math/matht.h>
 //
 //
+
 string format_elements(tensor_view cref view, nat depth = 1, bool not_last = false) {
     // todo: iterate tensor
     // in-order: 0, 1, 2, 3, 4, ...
@@ -32,7 +33,7 @@ string format_elements(tensor_view cref view, nat depth = 1, bool not_last = fal
 
 
 
-//    if (view.is_vector()) return to_string(view.vector());
+    if (view.is_vector()) return to_string(view.vector());
 
     string res{'['};
 
@@ -42,6 +43,7 @@ string format_elements(tensor_view cref view, nat depth = 1, bool not_last = fal
     for (cval subview : view) {
         res += format_elements(subview, depth + 1, i < size - 1);
         if (i < size - 1) res += '\n' + string(depth, ' ');
+        i++;
     }
 
     res += ']';
@@ -52,12 +54,14 @@ string format_elements(tensor_view cref view, nat depth = 1, bool not_last = fal
     return res;
 }
 
-
-
-//string to_string(tensor cref tensor) {
-//    if (tensor.rank() == 0) return to_string(tensor.elements[0]);
-//    return "T"_pr + tensor.rank() + to_string(tensor.dimensions, '(', ')') + "\n" + format_elements(tensor);
-//}
+string to_string(tensor cref tensor) {
+    if (tensor.rank() == 0) return to_string(tensor.elements[0]);
+    return "T"_pr + tensor.rank() + to_string(tensor.dimensions, '(', ')') + "\n" + format_elements(tensor.view());
+}
+string to_string(tensor_view cref view) {
+    if (view.dimensions.size == 0) return to_string(view.data_start[0]);
+    return "T"_pr + view.dimensions.size + to_string(view.dimensions, '(', ')') + "\n" + format_elements(view);
+}
 //string to_string(clayer layer) {
 //    return layer.name();
 //}

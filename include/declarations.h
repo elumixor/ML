@@ -32,6 +32,8 @@
 /* Macro for iteration */
 #define forsize for(var i{0u}; i < size; ++i)
 
+struct printable;
+
 /* Type aliases */
 /** Numeric type. (defaults to float) */
 using scalar = float;

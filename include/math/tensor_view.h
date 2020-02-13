@@ -29,32 +29,6 @@ struct tensor_view {
         bool operator!=(iterator cref other) const;
     };
 
-//    struct vector_view {
-//        struct iterator {
-//            const scalar *data;
-//            const nat step{0};
-//
-//            inline iterator(const scalar *data, const nat step) : data{data}, step{step} {}
-//            inline explicit iterator(const scalar *data) : data{data} {}
-//
-//            inline bool operator!=(iterator cref other) const { return data != other.data; }
-//            inline iterator cref operator++() {
-//                data += step;
-//                return *this;
-//            }
-//            inline scalar cref operator*() { return *data; }
-//        };
-//
-//        const scalar *start;
-//        const nat step;
-//        const nat count;
-//
-//        vector_view(const scalar *start, const nat step, const nat count) : start(start), step(step), count(count) {}
-//
-//        [[nodiscard]] inline iterator begin() const { return iterator(start, step); }
-//        [[nodiscard]] inline iterator end() const { return iterator(start + step * count); };
-//    };
-
     /** Elements starting pointer */
     const scalar *data_start;
 
@@ -75,7 +49,6 @@ struct tensor_view {
 
     [[nodiscard]] inline bool is_vector() const { return dimension_sizes.size - dimension_index < 2; }
     [[nodiscard]] inline select<scalar> vector() const { return select(data_start, step(), count()); }
-//    [[nodiscard]] inline vec::iterator vector_view() const { return vec(data_start, step(), count()); }
 
     [[nodiscard]] inline iterator begin() const { return iterator(data_start, dimensions, dimension_sizes, step(), dimension_index); }
     [[nodiscard]] inline iterator end() const { return iterator(data_end()); };

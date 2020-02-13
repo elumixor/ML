@@ -23,9 +23,16 @@ struct array_view {
     explicit array_view(const T *data, int step = 1) : copy_init_s(data), copy_init_s(step) {}
 };
 
+template<typename T>
+struct view_struct {
+    /* Iteration */
+    [[nodiscard]] virtual array_view<T> begin() const = 0;
+    [[nodiscard]] virtual array_view<T> end() const = 0;
+};
+
 /** Generic array of a fixed size. */
 template<typename T>
-struct farray {
+struct farray : view_struct<T> {
     /* Fields */
     /** Size of the array. */
     nat size{0};
@@ -118,8 +125,8 @@ struct farray {
     virtual ~farray() { delete[] elements; }
 
     /* Iteration */
-    [[nodiscard]] array_view<T> begin() const { return array_view<T>(elements); }
-    [[nodiscard]] array_view<T> end() const { return array_view<T>(elements + size); }
+    [[nodiscard]] array_view<T> begin() const override { return array_view<T>(elements); }
+    [[nodiscard]] array_view<T> end() const override { return array_view<T>(elements + size); }
 
     /* Operators */
     bool operator==(farray cref other) const {

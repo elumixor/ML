@@ -7,17 +7,7 @@
 #include <math/tensor_view.h>
 
 tensor_view::tensor_view(vec cref start, dim dimensions, dim dimension_sizes)
-        : data_start{start.elements}, move_init_s(dimensions), move_init_s(dimension_sizes), dimension_index{0} {
-
-    for (cval item : this->dimensions)
-        print("d : " + item);
-
-    print_line();
-
-    for (cval dimension : this->dimension_sizes)
-        print("ds: " + dimension);
-
-}
+        : data_start{start.elements}, move_init_s(dimensions), move_init_s(dimension_sizes), dimension_index{0} {}
 
 tensor_view::tensor_view(const scalar *data_start, dim dimensions, dim dimension_sizes, nat dimension_index)
         : copy_init_s(data_start), move_init_s(dimensions), move_init_s(dimension_sizes), copy_init_s(dimension_index) {}

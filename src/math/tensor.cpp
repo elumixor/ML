@@ -300,10 +300,10 @@ tensor::tensor(params<tensor> tensors) {
     }
 }
 tensor tensor::of(scalar value, dim cref dimensions) { return tensor(vec::of(product(dimensions), value)); }
-tensor_view tensor::view() {
+tensor_view tensor::view() const {
     return tensor_view(elements, dimensions, dimensions_sizes(*this));
 }
-tensor_view tensor::view(dim cref dimension_indices) {
+tensor_view tensor::view(dim cref dimension_indices) const {
     return tensor_view(elements,
                        select_at(dimensions, dimension_indices),
                        select_at(dimensions_sizes(*this), dimension_indices));

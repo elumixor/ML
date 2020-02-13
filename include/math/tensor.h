@@ -30,9 +30,9 @@ struct tensor {
     [[nodiscard]] inline scalar ref operator[](nat i) const { return elements[i]; }
 
     /** Creates a tensor view with default tensor dimensions. */
-    [[nodiscard]] tensor_view view();
+    [[nodiscard]] tensor_view view() const;
     /** Creates a tensor view with custom order of dimensions. */
-    [[nodiscard]]  tensor_view view(dim cref dimension_indices);
+    [[nodiscard]]  tensor_view view(dim cref dimension_indices) const;
 
     /* Constructors */
     /** Creates zero tensor. */

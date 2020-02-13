@@ -31,7 +31,7 @@ struct indices {
 };
 
 template<typename T>
-struct reverse {
+struct reverse : view_struct<T> {
     const T *start;
     nat size;
 
@@ -43,7 +43,7 @@ struct reverse {
 
 
 template<typename T>
-struct select {
+struct select : view_struct<T> {
     const T *data;
     const nat step;
     const nat count;
