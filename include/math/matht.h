@@ -10,7 +10,6 @@
 #include <assertions.h>
 #include "arrays/arrays.h"
 
-#define __require_arrays_same_size(a, b) require(a.size() == b.size(), "Arrays should have same size. " + a.size() + " and " + b.size() + " received.")
 
 /**
  * Multiplies all elements of array together.
@@ -59,12 +58,11 @@ farray<T> operator-(farray<T> arr, T scalar) {
  */
 template<typename T>
 T operator*(farray<T> a, farray<T> b) {
-    __require_arrays_same_size(a, b);
+    require(a.size == b.size, "Arrays should have same size. " + a.size + " and " + b.size + " received.")
 
-    auto size = a.size();
+    auto size = a.size;
     T sum{0};
-    for (auto i = 0u; i < size; ++i)
-        sum += a[i] * b[i];
+    forsize sum += a[i] * b[i];
 
     return sum;
 }
@@ -78,6 +76,23 @@ T operator*(farray<T> a, farray<T> b) {
 template<typename T>
 T dot(farray<T> a, farray<T> b) {
     return a * b;
+}
+/**
+ * Dot product for two vectors. Same as a * b
+ * @tparam T Numeric type.
+ * @param a First vector_view.
+ * @param b Second vector_view.
+ * @return Number, dot product of a * b.
+ */
+template<typename T>
+T dot(params<farray<T>> arrays) {
+    farray<T> result{farray<T>::of(arrays.begin()->size, 1)};
+    for (cval arr : arrays) {
+        val size{arr.size};
+        forsize result[i] *= arr[i];
+    }
+
+    return sum(result);
 }
 /**
  * Tensor dot product
@@ -105,10 +120,14 @@ tensor dot(tensor cref a, tensor cref b, dim cref dim_a, dim cref dim_b);
 
 /* Functions on tensors */
 /** Sums all elements of a tensor */
-[[nodiscard]] scalar sum(tensor cref t);
+[[nodiscard]] scalar sum(tensor_view cref t);
 /** Sums tensors along dimensions */
 [[nodiscard]] tensor sum(tensor cref t, nat dimension);
 /** Average of all elements of a tensor */
 [[nodiscard]] scalar mean(tensor cref t);
-
+///** Multiplies elements of two tensors. */
+//[[nodiscard]] tensor mul(tensor_view cref a, tensor_view cref b);
+/** Multiplies elements of two tensors. */
+//[[nodiscard]] tensor mul(tensor cref a, tensor cref b, dim cref, dim cref);
+//[[nodiscard]] tensor dot(tensor_view cref a, tensor_view cref b);
 #endif //CALCULUS_MATHT_H

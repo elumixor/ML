@@ -8,26 +8,41 @@
 #include <arrays/arrays.h>
 
 /* Indices iterable. Takes a dim (array of nat numbers) */
-struct indices {
-    dim dimensions;
-
-    explicit inline indices(dim dimensions) : move_init_s(dimensions) {}
-
+struct composite_index {
     /* Iterator  */
     struct iterator {
         dim cref maximum;
         dim current;
 
-        explicit iterator(dim cref maximum);
-        iterator(dim cref maximum, dim current);
+        explicit iterator(dim cref maximum) : cinits(maximum), current(maximum.size, 0) {}
+        iterator(dim cref maximum, dim current) : cinits(maximum), minits(current) {}
 
-        dim cref operator*() const;
+        inline dim cref operator*() const { return current; }
+        inline bool operator!=(iterator cref other) const { return current != other.current; }
         const iterator &operator++();
-        bool operator!=(iterator cref) const;
     };
 
-    [[nodiscard]] iterator begin() const;
-    [[nodiscard]] iterator end() const;
+    dim dimensions;
+    dim current_index;
+    dim sizes;
+
+    composite_index(dim dimensions, dim current_index)
+            : minits(dimensions), minits(current_index), sizes(dimensions_sizes(this->dimensions)) {}
+    explicit composite_index(dim cref dimensions) : composite_index(dimensions, dim(dimensions.size, 0)) {}
+
+    [[nodiscard]] nat unwrapped() const;
+    [[nodiscard]] nat unwrapped(dim cref dimension_sizes) const;
+    dim operator[](nat i) const;
+    composite_index ref operator++();
+
+    [[nodiscard]] inline iterator begin() const { return iterator(dimensions, current_index); }
+    [[nodiscard]] inline iterator end() const {
+        dim d(dimensions.size, 0);
+        d[0] = dimensions[0] + 1;
+        return iterator(dimensions, d);
+    }
+
+    static nat form_index(dim cref index, dim cref sizes);
 };
 
 template<typename T>
@@ -48,9 +63,14 @@ struct select : view_struct<T> {
     const nat step;
     const nat count;
 
-    select(farray<T> cref array, nat step, nat offset = 0)
-            : data{array.elements + offset}, copy_init_s(step), count{(array.size - offset) / step} {}
-    select(const T *data, nat step, nat count) : copy_init_s(data), copy_init_s(step), copy_init_s(count) {}
+    select(farray<T> cref array, nat step = 1, nat offset = 0)
+            : data{array.elements + offset}, cinits(step), count{(array.size - offset) / step} {}
+    select(const T *data, nat step, nat count) : cinits(data), cinits(step), cinits(count) {}
+
+    [[nodiscard]] T cref operator[](int index) const {
+        if (index < 0) index = count + index;
+        return data[step * index];
+    }
 
     [[nodiscard]] array_view<T> begin() const { return array_view<T>(data, step); }
     [[nodiscard]] array_view<T> end() const { return array_view<T>(data + (step * count)); }

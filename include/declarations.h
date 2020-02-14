@@ -24,10 +24,10 @@
 #define mref &&
 
 /* Macros for copy and move initialization */
-#define copy_init(field, other) field{other.field}
-#define copy_init_s(field) field{field}
-#define move_init(field, other) field{std::move(other.field)}
-#define move_init_s(field) field{std::move(field)}
+#define cinit(field, other) field{other.field}
+#define cinits(field) field{field}
+#define minit(field, other) field{std::move(other.field)}
+#define minits(field) field{std::move(field)}
 
 /* Macro for iteration */
 #define forsize for(var i{0u}; i < size; ++i)

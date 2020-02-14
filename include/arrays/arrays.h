@@ -20,7 +20,7 @@ struct array_view {
         return *this;
     }
     bool operator!=(array_view cref other) { return data != other.data; }
-    explicit array_view(const T *data, int step = 1) : copy_init_s(data), copy_init_s(step) {}
+    explicit array_view(const T *data, int step = 1) : cinits(data), cinits(step) {}
 };
 
 template<typename T>
@@ -60,35 +60,31 @@ struct farray : view_struct<T> {
     /** Creates an empty array of zero size. */
     farray() = default;
     /** Copies (deeply) elements of an existing array into a new one. */
-    farray(farray cref other) : copy_init(size, other), elements{new T[size]} { forsize elements[i] = other[i]; }
+    farray(farray cref other) : farray(other.size) { forsize elements[i] = other[i]; }
     /** Moves elements of an existing array into a new one. */
-    farray(farray mref other) noexcept : copy_init(size, other), copy_init(elements, other) {
+    farray(farray mref other) noexcept : cinit(size, other), cinit(elements, other) {
         other.elements = nullptr;
         other.size = 0;
     }
 
     /* Constructors (from elements) */
     /** Creates an array from elements at location. */
-    farray(T *elements, nat size) : copy_init_s(size), elements(new T[size]) { forsize this->elements[i] = elements[i]; }
+    farray(T *elements, nat size) : cinits(size), elements(new T[size]) { forsize this->elements[i] = elements[i]; }
     /** Creates an array from start address to end address. */
     farray(T *start, T *end) : size{end - start}, elements{new T[size]} { forsize elements[i] = start[i]; }
-    /** Creates and array from an initializer list of elements. */
+    /** Creates an array from an initializer list of elements. */
     farray(params<T> elements) : size{elements.size()}, elements{new T[size]} {
         val begin{elements.begin()};
         var i{0u};
         for (cval element : elements)
             this->elements[i++] = element;
     }
+    /** Creates an array and allocates elements, without initializing them */
+    farray(nat size) : cinits(size), elements(new T[size]) {}
+    /** Creates an array of a copy of the same element. */
+    farray(nat size, T element) : farray(size) { forsize elements[i] = element; }
 
     /* Static constructors */
-    /** Creates an array of a copy of the same element. */
-    static farray of(nat size, T element) {
-        farray result;
-        result.size = size;
-        result.elements = new T[size];
-        forsize result.elements[i] = element;
-        return result;
-    }
     /** Creates a range of numbers */
     static farray range(nat size, T start = 0, T step = 1) {
         farray result;
@@ -100,18 +96,19 @@ struct farray : view_struct<T> {
 
     /* Assignment operators */
     /** Copies (deeply) elements of an existing array into a new one. */
-    farray &operator=(farray cref other) {
-        if (this == &other)return *this;
+    farray ref operator=(farray cref other) {
+        if (this == ref other)return *this;
         delete[](elements);
 
         size = other.size;
         elements = new T[size];
 
         for (auto i{0u}; i < size; ++i) elements[i] = other.elements[i];
+        return *this;
     }
     /** Moves elements of an existing array into a new one. */
-    farray &operator=(farray mref other) noexcept {
-        if (this == &other)return *this;
+    farray ref operator=(farray mref other) noexcept {
+        if (this == ref other)return *this;
         delete[](elements);
 
         size = other.size;
@@ -119,6 +116,7 @@ struct farray : view_struct<T> {
 
         other.size = 0;
         other.elements = nullptr;
+        return *this;
     }
 
     /* Destructor */
@@ -161,5 +159,8 @@ template<typename T>
     forsize result[i] = source[indices[i]];
     return result;
 }
+
+/** Forms dimension sizes from a dimensions */
+dim dimensions_sizes(dim cref dimensions);
 
 #endif //MACHINE_LEARNING_ARRAYS_H

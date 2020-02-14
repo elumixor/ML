@@ -2,8 +2,9 @@
 // Created by vlado on 2/2/20.
 //
 
-#include <math/tensor.h>
-#include <math/matht.h>
+#include <tensor.h>
+#include <matht.h>
+#include <arrays/arrays.h>
 
 /* Helper functions */
 ///* Constructors */
@@ -242,22 +243,6 @@
 //}
 //tensor &operator/=(tensor &a, cnum b) { return a *= (to_scalar(1) / b); }
 
-/** Creates an array of number elements within each dimension. */
-dim dimensions_sizes(tensor cref tensor) {
-    dim dimension_sizes;
-    val size{tensor.dimensions.size};
-
-    dimension_sizes.size = size;
-    dimension_sizes.elements = new nat[size];
-
-    var product{1u};
-    for (var i{0u}; i < size; ++i) {
-        dimension_sizes[to_int(size) - i - 1] = product;
-        product *= tensor.dimensions[to_int(size) - i - 1];
-    }
-
-    return dimension_sizes;
-}
 
 /** Transforms composite index in multiple dimensions to a single index in one dimension for elements array */
 nat get_single_index(dim cref index, dim cref dimensions) {
@@ -274,8 +259,8 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 }
 
 scalar ref tensor::operator[](dim cref indices) const { return operator[](get_single_index(indices, dimensions)); }
-tensor::tensor(vec elements) : move_init_s(elements), dimensions{this->elements.size} {}
-tensor::tensor(vec elements, dim dimensions) : move_init_s(elements), move_init_s(dimensions) {}
+tensor::tensor(vec elements) : minits(elements), dimensions{this->elements.size} {}
+tensor::tensor(vec elements, dim dimensions) : minits(elements), minits(dimensions) {}
 tensor::tensor(params<tensor> tensors) {
     // Init dimensions
     cval b = *tensors.begin();
@@ -299,12 +284,16 @@ tensor::tensor(params<tensor> tensors) {
         forsize elements.elements[j++] = tensor[i];
     }
 }
-tensor tensor::of(scalar value, dim cref dimensions) { return tensor(vec::of(product(dimensions), value)); }
+tensor tensor::of(scalar value, dim cref dimensions) { return tensor(vec(product(dimensions), value)); }
 tensor_view tensor::view() const {
-    return tensor_view(elements, dimensions, dimensions_sizes(*this));
+    return tensor_view(*this);
 }
 tensor_view tensor::view(dim cref dimension_indices) const {
-    return tensor_view(elements,
-                       select_at(dimensions, dimension_indices),
-                       select_at(dimensions_sizes(*this), dimension_indices));
+    return tensor_view(*this, dimension_indices);
+}
+flat_view tensor::flat() const {
+    return flat_view(elements.elements, dimensions, dimensions_sizes(dimensions));
+}
+flat_view tensor::flat(dim cref dimension_indices) const {
+    return view(dimension_indices).flat();
 }

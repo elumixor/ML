@@ -1,15 +1,27 @@
-////
-//// Created by vlado on 2/2/20.
-////
 //
-//#include "math/matht.h"
-//#include <math/tensor.h>
-//#include <iterable.h>
-//#include <exceptions.h>
+// Created by vlado on 2/2/20.
 //
-//scalar sum(tensor cref t) { return sum(t.elements); }
-//tensor sum(tensor cref t, nat dim) { nimpl }
-//scalar mean(tensor cref t) { return sum(t) / t.size(); }
+
+#include "math/matht.h"
+#include <math/tensor.h>
+#include <exceptions.h>
+
+scalar sum(tensor cref t) { return sum(t.elements); }
+scalar mean(tensor cref t) { return sum(t) / t.size(); }
+//tensor mul(tensor_view cref av, tensor_view cref bv) {
+//
+//}
+//tensor extend(tensor_view cref a, tensor_view cref b) {
+//    a.flat();
+//}
+//tensor dot(tensor_view cref a, tensor_view cref b) {
+//
+//}
+//tensor mul(tensor cref a, tensor cref b, dim cref a_indices, dim cref b_indices) {
+//    val av{a.view(a_indices)};
+//    val bv{b.view(b_indices)};
+//    return mul(av, bv);
+//}
 //tensor outer(tensor cref a, tensor cref b) {
 //    var asz = a.size();
 //    var bsz = b.size();

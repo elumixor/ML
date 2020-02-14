@@ -3,27 +3,46 @@
 //
 
 #include <arrays/iterators.h>
+#include <math/matht.h>
 
-// Constructor
-indices::iterator::iterator(dim cref maximum) : copy_init_s(maximum), current{dim::of(maximum.size, 0)} {}
-indices::iterator::iterator(dim cref maximum, dim current) : copy_init_s(maximum), move_init_s(current) {}
-// Yielding value
-dim cref indices::iterator::operator*() const { return current; }
-// Moving forward
-const indices::iterator &indices::iterator::operator++() {
+void move_forward(dim cref maximum, dim ref current) {
     var dim{maximum.size - 1};
     while (dim > 0 && current[dim] >= maximum[dim] - 1)
         current[dim--] = 0;
 
-    current[dim] += 1;
+    current[dim]++;
+}
+
+// Iterator moving forward
+composite_index::iterator cref composite_index::iterator::operator++() {
+    move_forward(maximum, current);
     return *this;
 }
-bool indices::iterator::operator!=(indices::iterator cref other) const { return current != other.current; }
-// Begin, End
-indices::iterator indices::begin() const { return indices::iterator(dimensions); }
-indices::iterator indices::end() const {
-    if (dimensions.empty()) return indices::iterator({}, {});
-    val indices = dim::of(dimensions.size, 0);  // indices should be zero everywhere...
-    indices[0] = dimensions[0];                         // except for the first dimension
-    return indices::iterator(dimensions, indices);
+
+// Indices methods
+dim composite_index::operator[](nat index) const {
+    dim result(dimensions.size);
+    var size{dimensions.size};
+
+    forsize {
+        var ds{sizes[i]};
+        nat d = index / ds;
+        result.elements[i] = d;
+        index -= ds * d;
+    };
+
+    return result;
+}
+composite_index ref composite_index::operator++() {
+    move_forward(dimensions, current_index);
+    return *this;
+}
+nat composite_index::unwrapped() const {
+    return form_index(current_index, sizes);
+}
+nat composite_index::unwrapped(dim cref dimension_sizes) const {
+    return dot(current_index, dimension_sizes);
+}
+nat composite_index::form_index(dim cref index, dim cref sizes) {
+    return dot(index, sizes);
 }

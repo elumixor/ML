@@ -32,7 +32,7 @@ string to_string(const T *data) {
     return string("<") + string(typeid(*data).name()) + " at " + string(str) + ">";
 }
 
-string to_string(tensor cref tensor);
 string to_string(tensor_view cref view);
+string to_string(flat_view cref view, char opening_bracket = '[', char closing_bracket = ']', string cref separator = ", ");
 
 #endif //MACHINE_LEARNING_TO_STRING_H

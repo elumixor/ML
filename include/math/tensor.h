@@ -8,6 +8,7 @@
 #include <declarations.h>
 #include <arrays/iterators.h>
 #include <math/tensor_view.h>
+#include <math/flat_view.h>
 
 #include <utility>
 
@@ -22,6 +23,8 @@ struct tensor {
     /* Properties */
     /** Number of dimensions in a tensor. Same as dimensions.size. */
     [[nodiscard]] inline nat rank() const { return dimensions.size; }
+    /** Total number of elements. */
+    [[nodiscard]] inline nat size() const { return elements.size; }
 
     /* Methods */
     /** Accesses element at indices at dimensions. */
@@ -32,7 +35,11 @@ struct tensor {
     /** Creates a tensor view with default tensor dimensions. */
     [[nodiscard]] tensor_view view() const;
     /** Creates a tensor view with custom order of dimensions. */
-    [[nodiscard]]  tensor_view view(dim cref dimension_indices) const;
+    [[nodiscard]] tensor_view view(dim cref dimension_indices) const;
+    /** Creates a tensor view with elements flattened. */
+    [[nodiscard]] flat_view flat() const;
+    /** Creates a tensor view with elements flattened with custom order of dimensions. */
+    [[nodiscard]] flat_view flat(dim cref dimension_indices) const;
 
     /* Constructors */
     /** Creates zero tensor. */
@@ -40,7 +47,7 @@ struct tensor {
     /** Copies elements of another tensor. */
     inline tensor(tensor cref other) = default;
     /** Moves elements of another tensor. */
-    inline tensor(tensor mref other) noexcept : move_init(elements, other), move_init(dimensions, other) {}
+    inline tensor(tensor mref other) noexcept : minit(elements, other), minit(dimensions, other) {}
 
     /** Creates 1D tensor (vector_view) with numbers. */
     explicit tensor(vec elements);
@@ -71,4 +78,6 @@ struct tensor {
 //tensor operator*(tensor cref a, tensor cref b); // hadamard
 //tensor operator*(scalar b, tensor cref a);
 //tensor operator/(tensor cref a, scalar b);
+
+
 #endif //CALCULUS_TENSOR_H
