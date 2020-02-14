@@ -125,6 +125,7 @@ tensor dot(tensor cref a, tensor cref b, dim cref dim_a, dim cref dim_b);
 [[nodiscard]] tensor sum(tensor cref t, nat dimension);
 /** Average of all elements of a tensor */
 [[nodiscard]] scalar mean(tensor cref t);
+[[nodiscard]] tensor extend(tensor_view cref a, tensor_view cref b);
 ///** Multiplies elements of two tensors. */
 //[[nodiscard]] tensor mul(tensor_view cref a, tensor_view cref b);
 /** Multiplies elements of two tensors. */

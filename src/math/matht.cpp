@@ -11,9 +11,17 @@ scalar mean(tensor cref t) { return sum(t) / t.size(); }
 //tensor mul(tensor_view cref av, tensor_view cref bv) {
 //
 //}
-//tensor extend(tensor_view cref a, tensor_view cref b) {
-//    a.flat();
-//}
+tensor extend(tensor_view cref a, tensor_view cref b) {
+    val size{a.size() * b.size()};
+    vec elements(size);
+
+    var i{0u};
+    for (cval a1 : a.flat())
+        for (cval b1 : b.flat())
+            elements[i++] = a1 * b1;
+
+    return {elements, concat(a.dimensions, b.dimensions)};
+}
 //tensor dot(tensor_view cref a, tensor_view cref b) {
 //
 //}

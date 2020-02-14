@@ -163,4 +163,19 @@ template<typename T>
 /** Forms dimension sizes from a dimensions */
 dim dimensions_sizes(dim cref dimensions);
 
+/** Concatenates two arrays. New array will have all elements of the first array, followed by all elements of a second. */
+template<typename T>
+farray<T> concat(farray<T> a, farray<T> b) {
+    var size{a.size + b.size};
+    farray<T> result(size);
+
+    var i{0u};
+    for (cval a1 : a)
+        result[i++] = a1;
+    for (cval b1 : b)
+        result[i++] = b1;
+
+    return result;
+}
+
 #endif //MACHINE_LEARNING_ARRAYS_H

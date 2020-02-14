@@ -21,22 +21,27 @@ int main() {
              }};
 
 //    print(dot(vec{1, 2, 3}, vec{1, 0, 1}));
-
-    // Printing tensor in different views
+//
+//    // Printing tensor in different views
+////    print(Y);
+////    print_line();
+////    print(Y.view({2, 0, 1}));
+////    print_line();
+////    print(Y.flat({2, 0, 1}));
+////    print_line();
+//
 //    print(Y);
 //    print_line();
-//    print(Y.view({2, 0, 1}));
+//    print(Y.flat());
 //    print_line();
-//    print(Y.flat({2, 0, 1}));
+//    print(Y.view({2, 1, 0}));
 //    print_line();
+//    print(Y.view({2, 1, 0}).flat());
+//    print_line();
+//    print(Y.flat({2, 1, 0}));
 
-    print(Y);
-    print_line();
-    print(Y.flat());
-    print_line();
-    print(Y.view({2, 1, 0}));
-    print_line();
-    print(Y.view({2, 1, 0}).flat());
+    print(extend(extend(tensor{1, 2, 3, 4, 5, 6}, tensor{1, 0, 1}), tensor{2, 3}));
+//    print(extend(Y, Y));
 //    dim dims{3, 2, 4};
 //    composite_index a(dims);
 

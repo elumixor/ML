@@ -135,21 +135,7 @@ struct select : view_struct<T> {
 //
 //    return result;
 //}
-///**
-// * Concatenates two arrays. New array will have all elements of the first array, followed by all elements of a second.
-// */
-//template<typename T>
-//array<T> concat(carray<T> a, carray<T> b) {
-//    var size{a.size + b.size};
-//
-//    array<T> result;
-//    result.reserve(size);
-//
-//    result.insert(result.end(), a.begin(), a.end());
-//    result.insert(result.end(), b.begin(), b.end());
-//
-//    return result;
-//}
+
 ///**
 // * Returns a portion of a array.
 // * @tparam T Array data type.

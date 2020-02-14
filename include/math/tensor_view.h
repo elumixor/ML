@@ -48,7 +48,7 @@ struct tensor_view {
     [[nodiscard]] inline nat step() const { return dimension_sizes[dimension_index]; }
     /** Pointer to data end. */
     [[nodiscard]] inline const scalar *data_end() const { return data_start + count() * step(); }
-
+    [[nodiscard]] inline nat size() const { return dimensions[0] * dimension_sizes[0]; }
     /* Methods */
     /** True if dimension index is one before the last. */
     [[nodiscard]] inline bool is_vector() const { return dimension_sizes.size - dimension_index < 2; }
