@@ -46,7 +46,7 @@ struct layer {
      * @example W = W - gradient * learning_rate;
      * @param learning_rate Multiplier for the gradient
      */
-    virtual void update(scalar learning_rate) = 0;
+    virtual void update(num learning_rate) = 0;
     /**
      * Creates a heap-allocated copy of a layer
      * @return Pointer to created copy

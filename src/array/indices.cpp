@@ -37,10 +37,10 @@ composite_index ref composite_index::operator++() {
     move_forward(dimensions, current_index);
     return *this;
 }
-nat composite_index::unwrapped() const {
+nat composite_index::flat() const {
     return form_index(current_index, sizes);
 }
-nat composite_index::unwrapped(dim cref dimension_sizes) const {
+nat composite_index::flat(dim cref dimension_sizes) const {
     return dot(current_index, dimension_sizes);
 }
 nat composite_index::form_index(dim cref index, dim cref sizes) {

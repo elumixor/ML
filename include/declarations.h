@@ -36,7 +36,7 @@ struct printable;
 
 /* Type aliases */
 /** Numeric type. (defaults to float) */
-using scalar = float;
+using num = float;
 /** Natural number, used for indexing */
 using nat = size_t;
 /** Alias for std::string */
@@ -46,5 +46,6 @@ using string = std::string;
 template<typename T> using params = std::initializer_list<T>;
 /** Alias for std::to_string function */
 using std::to_string;
+using std::move;
 
 #endif //CALCULUS_DEF_H

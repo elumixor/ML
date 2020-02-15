@@ -101,7 +101,7 @@ T dot(params<farray<T>> arrays) {
  * @param dim_a Dimension to sum over on a
  * @param dim_b Dimension to sum over on b
  */
-tensor dot(tensor cref a, tensor cref b, nat dim_a, nat dim_b);
+//tensor dot(tensor cref a, tensor cref b, nat dim_a, nat dim_b);
 /**
  * Tensor dot product
  * @param a First tensor
@@ -109,23 +109,23 @@ tensor dot(tensor cref a, tensor cref b, nat dim_a, nat dim_b);
  * @param dim_a Dimensions to sum over
  * @param dim_b Dimensions to sum over
  */
-tensor dot(tensor cref a, tensor cref b, dim cref dim_a, dim cref dim_b);
+//tensor dot(tensor cref a, tensor cref b, dim cref dim_a, dim cref dim_b);
 /**
  * Tensor (outer) product for vecotrs and tensors
  * @param a
  * @param b
  * @return
  */
-[[nodiscard]] tensor outer(tensor cref a, tensor cref b);
+//tensor outer(tensor cref a, tensor cref b);
 
 /* Functions on tensors */
 /** Sums all elements of a tensor */
-[[nodiscard]] scalar sum(tensor_view cref t);
+//scalar sum(tensor_view cref t);
 /** Sums tensors along dimensions */
-[[nodiscard]] tensor sum(tensor cref t, nat dimension);
+//tensor sum(tensor cref t, nat dimension);
 /** Average of all elements of a tensor */
-[[nodiscard]] scalar mean(tensor cref t);
-[[nodiscard]] tensor extend(tensor_view cref a, tensor_view cref b);
+//scalar mean(tensor cref t);
+//tensor extend(tensor cref a, tensor cref b);
 ///** Multiplies elements of two tensors. */
 //[[nodiscard]] tensor mul(tensor_view cref a, tensor_view cref b);
 /** Multiplies elements of two tensors. */

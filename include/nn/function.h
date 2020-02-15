@@ -14,7 +14,7 @@
  */
 struct function : layer {
 /** Update on a function has no effect, because function has no learnable parameters. */
-    void update(scalar) final;
+    void update(num) final;
 };
 
 #endif //CALCULUS_FUNCTION_H

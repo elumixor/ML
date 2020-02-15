@@ -6,6 +6,7 @@
 #define MACHINE_LEARNING_ITERATORS_H
 
 #include <arrays/arrays.h>
+#include <math/matht.h>
 
 /* Indices iterable. Takes a dim (array of nat numbers) */
 struct composite_index {
@@ -30,10 +31,11 @@ struct composite_index {
             : minits(dimensions), minits(current_index), sizes(dimensions_sizes(this->dimensions)) {}
     explicit composite_index(dim cref dimensions) : composite_index(dimensions, dim(dimensions.size, 0)) {}
 
-    [[nodiscard]] nat unwrapped() const;
-    [[nodiscard]] nat unwrapped(dim cref dimension_sizes) const;
+    [[nodiscard]] nat flat() const;
+    [[nodiscard]] nat flat(dim cref dimension_sizes) const;
     dim operator[](nat i) const;
     composite_index ref operator++();
+    [[nodiscard]] nat size() const { return product(dimensions); }
 
     [[nodiscard]] inline iterator begin() const { return iterator(dimensions, current_index); }
     [[nodiscard]] inline iterator end() const {
@@ -136,26 +138,6 @@ struct select : view_struct<T> {
 //    return result;
 //}
 
-///**
-// * Returns a portion of a array.
-// * @tparam T Array data type.
-// * @param source Source array.
-// * @param start Start index. Specify negative number to count from the end.
-// * @param count Remove count. Specify negative number to remove all elements from start.
-// * @return Copy of array
-// */
-//template<typename T>
-//array<T> slice(carray<T> source, int start = 0, int count = -1) {
-//    val size = source.size;
-//    val _start = to_nat(start >= 0 ? start : to_int(size) + start);
-//
-//    check(_start <= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
-//
-//    if (count < 0)
-//        return array<T>(source.begin() + _start, source.end());
-//
-//    return array<T>(source.begin() + _start, source.begin() + _start + count);
-//}
 ///**
 // * Removes range of elements from array. Returns a copy.
 // * @tparam T Array data type.

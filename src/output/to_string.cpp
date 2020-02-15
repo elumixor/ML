@@ -11,16 +11,16 @@
 //#include <math/matht.h>
 
 
-string format_elements(tensor_view cref view, nat depth = 1, bool not_last = false) {
-    if (view.is_vector()) return to_string(view.vector());
+string format_elements(tensor cref t, nat depth = 1, bool not_last = false) {
+    if (t.is_vector()) return to_string(t.elements);
 
     string res{'['};
 
-    val size{view.count()};
+    val size{t.subdim_count()};
 
     var i{0u};
-    for (cval subview : view) {
-        res += format_elements(subview, depth + 1, i < size - 1);
+    for (cval t1 : t) {
+        res += format_elements(t1, depth + 1, i < size - 1);
         if (i < size - 1) res += '\n' + string(depth, ' ');
         i++;
     }
@@ -33,12 +33,11 @@ string format_elements(tensor_view cref view, nat depth = 1, bool not_last = fal
     return res;
 }
 
-string to_string(tensor_view cref view) {
-    if (view.dimensions.size == 0) return to_string(view.data_start[0]);
-    return "T"_pr + view.dimensions.size + to_string(view.dimensions, '(', ')') + "\n" + format_elements(view);
+string to_string(tensor cref t) {
+    return "T"_pr + t.dimensions.size + to_string(t.dimensions, '(', ')') + "\n" + format_elements(t);
 }
 
-string to_string(flat_view cref view, char opening_bracket, char closing_bracket, string cref separator) {
+string to_string(vec cref view, char opening_bracket, char closing_bracket, string cref separator) {
     string result{opening_bracket};
 
     for (cval item : view)

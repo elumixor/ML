@@ -6,21 +6,35 @@
 #include <math/tensor.h>
 #include <exceptions.h>
 
-scalar sum(tensor cref t) { return sum(t.elements); }
-scalar mean(tensor cref t) { return sum(t) / t.size(); }
-//tensor mul(tensor_view cref av, tensor_view cref bv) {
+num sum(tensor cref t) { return sum(t.elements); }
+num mean(tensor cref t) { return sum(t) / t.elements_count(); }
+tensor dot(tensor cref a, tensor cref b) {
+//    val av{a.view()};
+//    val bv{b.view()};
 //
-//}
-tensor extend(tensor_view cref a, tensor_view cref b) {
-    val size{a.size() * b.size()};
-    vec elements(size);
-
-    var i{0u};
-    for (cval a1 : a.flat())
-        for (cval b1 : b.flat())
-            elements[i++] = a1 * b1;
-
-    return {elements, concat(a.dimensions, b.dimensions)};
+//    val a_end{av.end()};
+//    val b_end{bv.end()};
+//    var a_begin{av.begin()}, b_begin{bv.begin()}
+//
+//    var sum{(*a_begin) * (*b_begin)};
+//    ++a_begin, ++b_begin;
+//    for (; a_begin != a_end; ++a_begin, ++b_begin) {
+//        val a_subview{*a_begin};
+//        val b_subview{*b_begin};
+//
+//        sum += a_subview * b_subview;
+//    }
+}
+tensor extend(tensor cref a, tensor cref b) {
+//    val size{a.size() * b.size()};
+//    vec elements(size);
+//
+//    var i{0u};
+//    for (cval a1 : a.flat())
+//        for (cval b1 : b.flat())
+//            elements[i++] = a1 * b1;
+//
+//    return {elements, concat(a.dimensions, b.dimensions)};
 }
 //tensor dot(tensor_view cref a, tensor_view cref b) {
 //

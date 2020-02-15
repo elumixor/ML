@@ -138,7 +138,7 @@ struct farray : view_struct<T> {
 
 using dim = farray<nat>;
 using idim = farray<int>;
-using vec = farray<scalar>;
+using vec = farray<num>;
 
 template<typename T>
 [[nodiscard]] farray<T> select_at(farray<T> cref source, idim cref indices) {
@@ -176,6 +176,27 @@ farray<T> concat(farray<T> a, farray<T> b) {
         result[i++] = b1;
 
     return result;
+}
+
+/**
+ * Returns a portion of a array.
+ * @tparam T Array data type.
+ * @param source Source array.
+ * @param start Start index. Specify negative number to count from the end.
+ * @param count Remove count. Specify negative number to remove all elements from start.
+ * @return Copy of array
+ */
+template<typename T>
+farray<T> slice(farray<T> cref source, int start = 0, int count = -1) {
+    val size{source.size};
+    val _start = to_nat(start >= 0 ? start : to_int(size) + start);
+
+    check(_start <= size, "Start index should be in range: [-" + size + ", " + size + "). Received: " + start)
+
+    if (count < 0)
+        return farray<T>(source.elements + start, size - start);
+
+    return farray<T>(source.elements + _start, count);
 }
 
 #endif //MACHINE_LEARNING_ARRAYS_H
