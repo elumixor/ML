@@ -2,7 +2,7 @@
 // Created by vlado on 2/2/20.
 //
 
-#include "declarations.h"
+#include "common/declarations.h"
 #include "output/printable.h"
 #include <iostream>
 #include <utility>

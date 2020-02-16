@@ -5,8 +5,8 @@
 #ifndef CALCULUS_ASSERTIONS_H
 #define CALCULUS_ASSERTIONS_H
 
-#include <declarations.h>
-#include <exceptions.h>
+#include <common/declarations.h>
+#include <common/exceptions.h>
 #include <output/printable.h>
 
 /** We define require as a macro to let message be lazily-evaluated */

@@ -2,8 +2,8 @@
 // Created by vlado on 2/2/20.
 //
 
-#include <declarations.h>
-#include <math/tensor.h>
+#include <common/declarations.h>
+#include <collections/tensor.h>
 #include <output/to_string.h>
 //#include <nn/network.h>
 //#include <output/to_string.h>
@@ -34,7 +34,12 @@ string format_elements(tensor cref t, nat depth = 1, bool not_last = false) {
 }
 
 string to_string(tensor cref t) {
+    if (t.is_scalar()) return to_string(t.elements[0]);
+
     return "T"_pr + t.dimensions.size + to_string(t.dimensions, '(', ')') + "\n" + format_elements(t);
+}
+string to_string(composite_index cref index) {
+    return "composite_index: dim: "_pr + index.dimensions + " sizes: " + index.sizes + " current: " + index.current_index;
 }
 
 string to_string(vec cref view, char opening_bracket, char closing_bracket, string cref separator) {
@@ -65,7 +70,7 @@ string to_string(vec cref view, char opening_bracket, char closing_bracket, stri
 //    return str;
 //}
 ////string to_string(indices cref itr) {
-////    array<vnat> result;
+////    collections<vnat> result;
 ////
 ////    val size{product(itr.dimensions)};
 ////    result.reserve(size);

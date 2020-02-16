@@ -31,6 +31,7 @@
 
 /* Macro for iteration */
 #define forsize for(var i{0u}; i < size; ++i)
+#define forin(initializer) val size{initializer}; for(var i{0u}; i < size; ++i)
 
 struct printable;
 
@@ -41,7 +42,7 @@ using num = float;
 using nat = size_t;
 /** Alias for std::string */
 using string = std::string;
-/** Alias for std::array<T> @tparam T data type */
+/** Alias for std::collections<T> @tparam T data type */
 /** Alias for initializer lise */
 template<typename T> using params = std::initializer_list<T>;
 /** Alias for std::to_string function */

@@ -1,12 +1,12 @@
 import numpy as np
 from numpy import array
 
-# A = array([1, 2, 3])
+# A = collections([1, 2, 3])
 # print(A)
 # print(A + 1)
 # print()
 
-# A = array([[1, 2], [3, 4]])
+# A = collections([[1, 2], [3, 4]])
 # print(A)
 # print()
 # print(A + 1)
@@ -21,7 +21,7 @@ from numpy import array
 # print(A + [1, 1])
 # print()
 
-# A = array([[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]])
+# A = collections([[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0]]])
 # print(A)
 
 v = np.array([1, 2, 3])

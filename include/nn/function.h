@@ -6,7 +6,7 @@
 #define CALCULUS_FUNCTION_H
 
 
-#include <declarations.h>
+#include <common/declarations.h>
 #include "layer.h"
 
 /**

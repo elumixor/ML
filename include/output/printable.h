@@ -5,7 +5,7 @@
 #ifndef CALCULUS_PRINTABLE_H
 #define CALCULUS_PRINTABLE_H
 
-#include <declarations.h>
+#include <common/declarations.h>
 
 struct printable {
     string str;

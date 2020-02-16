@@ -5,8 +5,8 @@
 #ifndef CALCULUS_RANDOM_H
 #define CALCULUS_RANDOM_H
 
-#include <declarations.h>
-#include <arrays/arrays.h>
+#include <common/declarations.h>
+#include <collections/arrays.h>
 
 num random_uniform(num min = 0, num max = 1);
 num random_normal(num mean = .5, num std = .5);

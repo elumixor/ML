@@ -19,7 +19,7 @@
 //     * Layers may have learnable parameters (weights) and store gradients,
 //     * or may simply be functions with no such parameters.
 //     */
-//    array<layer *> layers;
+//    collections<layer *> layers;
 //
 //    /* Constructors */
 //    /**

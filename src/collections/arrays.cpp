@@ -2,9 +2,9 @@
 // Created by Vladyslav Yazykov on 14/02/2020.
 //
 
-#include <arrays/arrays.h>
+#include <collections/arrays.h>
 
-/** Creates an array of number elements within each dimension. */
+/** Creates an collections of number elements within each dimension. */
 dim dimensions_sizes(dim cref dimensions) {
     val size{dimensions.size};
     dim dimension_sizes(size);

@@ -2,10 +2,10 @@
 // Created by vlado on 2/2/20.
 //
 
-#include <tensor.h>
-#include <matht.h>
-#include <arrays/arrays.h>
-#include <arrays/iterators.h>
+#include <collections/tensor.h>
+#include <collections/arrays.h>
+#include <collections/composite_index.h>
+
 #include <output/to_string.h>
 
 /* Helper functions */
@@ -69,8 +69,8 @@
 //    this->dimensions = new_dim;
 //    return *this;
 //}
-//array<tensor> tensor::subdim() const {
-//    array<tensor> results(dimensions[0], tensor({dimensions.begin() + 1, dimensions.end()}, 0));
+//collections<tensor> tensor::subdim() const {
+//    collections<tensor> results(dimensions[0], tensor({dimensions.begin() + 1, dimensions.end()}, 0));
 //    val elements_count = size() / dimensions[0]; // elements in each sub-dimension
 //
 //    for (var i = 0u; i < dimensions[0]; ++i) {
@@ -244,9 +244,17 @@
 //    return a;
 //}
 //tensor &operator/=(tensor &a, cnum b) { return a *= (to_scalar(1) / b); }
+dim extended_view(idim cref dim_order, nat total_size) {
+    var extended_view{dim::range(total_size)};
 
+    var i{0u};
+    for (cval item : dim_order) swap(extended_view, i++, item);
+    std::sort(extended_view.elements + i, extended_view.elements + total_size);
 
-/** Transforms composite index in multiple dimensions to a single index in one dimension for elements array */
+    return extended_view;
+}
+
+/** Transforms composite index in multiple dimensions to a single index in one dimension for elements collections */
 nat get_single_index(dim cref index, dim cref dimensions) {
     nat s{0};
     nat dim_size{1};
@@ -262,7 +270,6 @@ nat get_single_index(dim cref index, dim cref dimensions) {
 
 num ref tensor::operator[](dim cref indices) const { return operator[](get_single_index(indices, dimensions)); }
 
-//tensor::tensor(vec elements, dim dimensions) : minits(elements), minits(dimensions) {}
 tensor::tensor(params<tensor> tensors) {
     // Init dimensions
     cval b = *tensors.begin();
@@ -289,9 +296,12 @@ tensor::tensor(params<tensor> tensors) {
     dim_sizes = dimensions_sizes(dimensions);
 }
 tensor tensor::of(dim cref dimensions, num value) { return tensor(vec(product(dimensions), value), dimensions); }
-tensor tensor::view(dim cref dim_order) const {
-    dim re_dims{select_at(dimensions, dim_order)};
-    dim re_dim_sizes{select_at(dim_sizes, dim_order)};
+
+tensor tensor::view(idim cref dim_order) const {
+    val order{extended_view(dim_order, dimensions.size)};
+
+    dim re_dims{select_at(dimensions, order)};
+    dim re_dim_sizes{select_at(dim_sizes, order)};
 
     composite_index index(re_dims);
     var size{elements_count()};
@@ -304,16 +314,32 @@ tensor tensor::view(dim cref dim_order) const {
 
     return {result, re_dims};
 }
-//tensor_view tensor::view() const {
-//    return tensor_view(*this);
-//}
-//tensor_view tensor::view(dim cref dimension_indices) const {
-//    return tensor_view(*this, dimension_indices);
-//}
-//flat_view tensor::flat() const {
-//    return flat_view(elements.elements, dimensions, dimensions_sizes(dimensions));
-//}
-//flat_view tensor::flat(dim cref dimension_indices) const {
-//    return view(dimension_indices).flat();
-//}
-//tensor::tensor(tensor_view cref view) : elements(view.flat().to_vec()), dimensions(view.dimensions) {}
+
+
+/* Funcions */
+num sum(tensor cref t) { return sum(t.elements); }
+num mean(tensor cref t) { return sum(t) / t.elements_count(); }
+tensor dot(tensor cref a, tensor cref b, pair<idim, idim> cref views) { return low_dot(a.view(views.first), b.view(views.second)); }
+
+tensor low_dot(tensor cref a, tensor cref b) {
+    require(a.subdim_count() == b.subdim_count(), "Received unequal sub-dimensions: " + a.subdim_count() + " != " + b.subdim_count() + ".")
+
+    val a_end{a.end()};
+    var a_begin{a.begin()}, b_begin{b.begin()};
+
+    var sum{extend(*a_begin , *b_begin)};
+
+    ++a_begin, ++b_begin;
+    for (; a_begin != a_end; ++a_begin, ++b_begin) {
+        val a_subview{*a_begin};
+        val b_subview{*b_begin};
+
+        sum += extend(a_subview, b_subview);
+    }
+
+    return sum;
+}
+
+tensor extend(tensor cref a, tensor cref b) {
+    return {extend(a.elements, b.elements), concat(a.dimensions, b.dimensions)};
+}

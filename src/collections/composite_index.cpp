@@ -1,9 +1,8 @@
 //
-// Created by Vladyslav Yazykov on 06/02/2020.
+// Created by Vladyslav Yazykov on 15/02/2020.
 //
 
-#include <arrays/iterators.h>
-#include <math/matht.h>
+#include "collections/composite_index.h"
 
 void move_forward(dim cref maximum, dim ref current) {
     var dim{maximum.size - 1};
@@ -18,7 +17,6 @@ composite_index::iterator cref composite_index::iterator::operator++() {
     move_forward(maximum, current);
     return *this;
 }
-
 // Indices methods
 dim composite_index::operator[](nat index) const {
     dim result(dimensions.size);

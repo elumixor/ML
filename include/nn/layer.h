@@ -6,8 +6,8 @@
 #define CALCULUS_LAYER_H
 
 
-#include <declarations.h>
-#include <math/tensor.h>
+#include <common/declarations.h>
+#include <collections/tensor.h>
 
 #define layer_name(n)                                                       \
     static constexpr const char *s_name{"[" n "]"};                         \
